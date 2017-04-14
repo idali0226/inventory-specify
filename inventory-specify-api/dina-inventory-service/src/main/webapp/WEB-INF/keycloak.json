@@ -1,0 +1,10 @@
+{
+  "realm": "dina",
+  "realm-public-key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwVuRAntMYBdz/lOPt3/FxXe/PBOBUNJVaiUmC7fD85hW2sQv8YCDd1s1ojN0+7eOW+sHA8NRcM60eO8MX5bp7OCwvl93Gy7g52sDrLPEKunE1hDvJqDQq6eorvnL1PnIUeLhmC6UfCOJGOu5RLXrnTc2JAXu+GLZkoNdotg2I4wIYTrWC7DCRJtql1YA5Az98POaVjcG9Szl3cxpZnmvsv7dniEdWzc9jx9aq3Yrkixb7rFe5Us+YLkx5iwD0+uh+0JGR5SNVmrgtXMM9uutjgMiCP3hhershCWnzL+vs4ceJSR3sl0V3WGVCyB1klyuCKuytFwgmLHzUwqVHAOFdQIDAQAB",
+  "auth-server-url": "http://localhost:8080/auth",
+  "ssl-required": "external",
+  "resource": "inventory",
+  "public-client": true,
+  "use-resource-role-mappings": true
+}
+ 

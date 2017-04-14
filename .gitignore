@@ -1,0 +1,7 @@
+/inventory-specify-api/dina-datamodel/target/ 
+/inventory-specify-api/dina-data-jpa/target/ 
+/inventory-specify-api/dina-inventory-logic/target/ 
+/inventory-specify-api/dina-inventory-service/target/ 
+
+/inventory-specify-client/dina-manager/target/ 
+/inventory-specify-client/dina-inventory-client/target/ 
