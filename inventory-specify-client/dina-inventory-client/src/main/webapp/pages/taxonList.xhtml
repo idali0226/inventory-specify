@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"   
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:p="http://primefaces.org/ui"  >
+
+    <body>
+        <ui:composition  template="/templates/masterLayout.xhtml">      
+            <ui:define name="windowTitle">
+                Species List Page
+            </ui:define> 
+            <ui:define name="content"  >  
+                <h:form id="taxonListForm" prependId="false">
+                    <p:messages autoUpdate="true" showDetail="true" showSummary="false" closable="true"   showIcon="true" />
+
+                    <h:panelGroup layout="block" style=" margin-left: auto; margin-left: auto; font-size: 11px;"> 
+                        <p:dataTable var="taxa" value="#{fileHandler.taxonList}"  
+                                     rows="500" paginator="true" 
+                                     paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                                     styleClass="fixed-size" rendered="#{fileHandler.taxonList.size() > 0}" >
+
+                            <f:facet name="header">
+                                File uploaded: #{fileHandler.excelFile}<br />
+                                #{msg.readintaxon}   <p:spacer width="10" />           Time [ #{fileHandler.dyntaxaDumpDate} ]<br />
+                                Determined by: #{fileHandler.determiner} 
+                            </f:facet>
+
+                            <p:columnGroup type="header">
+                                <p:row>
+                                    <p:column colspan="3" headerText="Taxon from sheet" />
+                                    <p:column colspan="3" headerText="Taxon from Dyntaxa" />
+                                </p:row>
+                                <p:row>
+                                    <p:column headerText="Taxon"  />
+                                    <p:column headerText="GUID"   />
+                                    <p:column headerText="Author"/>
+                                    <p:column headerText="Type of Match"/>
+                                    <p:column headerText="Dyntaxa Name"  />
+                                    <p:column headerText="Dyntaxa GUID"    /> 
+                                </p:row>
+                            </p:columnGroup>
+
+                            <p:column style="font-size: 11px; width: 160px; "  >
+                                <h:outputText value="#{taxa.taxa}" />
+                            </p:column>
+
+                            <p:column style="font-size: 11px; width: 170px; "> 
+                                <h:outputText value="#{taxa.guid}" />
+                            </p:column>
+
+                            <p:column   style="font-size: 11px; width: 80px; "  >
+                                <h:outputText value="#{taxa.author}" />
+                            </p:column>
+
+                            <p:column  style="font-size: 11px; width: 80px; " >
+                                <h:outputText value="#{taxa.type}" />
+                            </p:column>
+
+                            <p:column  style="font-size: 11px; width: 140px; " >
+                                <h:outputText value="#{taxa.dyntaxaName}"/>
+                            </p:column>
+
+                            <p:column style="font-size: 11px; width: 170px; ">
+                                <h:outputText value="#{taxa.dyntaxaGuid}" />
+                            </p:column>
+                        </p:dataTable>
+                    </h:panelGroup>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

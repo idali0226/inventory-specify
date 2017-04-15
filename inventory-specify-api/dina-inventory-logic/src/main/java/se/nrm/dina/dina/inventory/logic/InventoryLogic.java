@@ -6,15 +6,33 @@
 package se.nrm.dina.dina.inventory.logic;
  
 import java.io.Serializable;
-import java.sql.Timestamp; 
+import java.sql.Timestamp;   
+import java.util.ArrayList;  
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import javax.ejb.EJB; 
-import javax.ejb.Stateless;    
+import java.util.Map;
+import java.util.stream.IntStream;
+import javax.ejb.EJB;  
+import javax.ejb.Stateless;     
+import org.codehaus.jettison.json.JSONArray;
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;  
 import se.nrm.dina.data.jpa.SMTPDao;
+import se.nrm.dina.datamodel.impl.Agent;
+import se.nrm.dina.datamodel.impl.Collectingevent;
+import se.nrm.dina.datamodel.impl.Collection;
+import se.nrm.dina.datamodel.impl.Collectionobject;
+import se.nrm.dina.datamodel.impl.Determination;
+import se.nrm.dina.datamodel.impl.Preparation;
+import se.nrm.dina.datamodel.impl.Preptype;
+import se.nrm.dina.datamodel.impl.Taxon;
+import se.nrm.dina.datamodel.impl.Taxontreedef;
 import se.nrm.dina.dina.inventory.logic.util.JsonBuilder;
 import se.nrm.dina.dina.inventory.logic.util.QueryStringBuilder;
+import se.nrm.dina.dina.inventory.logic.util.Util;
 
 /**
  *
@@ -25,8 +43,19 @@ public class InventoryLogic implements Serializable {
     
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
     
+    private static final String NAMED_QUERY_GET_AGENT_BY_NAME = "Agent.findByAgentName";
+    
     private Timestamp timestamp;
- 
+    private Agent createdBy;
+    private Taxon taxon;
+    private Agent determinedBy;
+    private Taxontreedef taxonTreeDef;
+    private Preptype preptype;
+    private Collectingevent event;
+    private Collection collection;
+    List<Determination> determinations;
+    List<Preparation> prepartions;
+    
     @EJB
     private SMTPDao dao;
      
@@ -40,168 +69,232 @@ public class InventoryLogic implements Serializable {
                 QueryStringBuilder.getInstance().buildGetSmtpAgentList());
         return JsonBuilder.getInstance().buildAgentList(results);
     }
+     
+ 
+    public String upload(String json) {
+        logger.info("upload ");
 
-    public void cleanUp() {
-        dao.deleteOldSMTPData();
+        createdBy = (Agent) dao.findByReference(Util.getInstance().getAgentId(), Agent.class);
+        timestamp = new Timestamp(System.currentTimeMillis());
+        taxonTreeDef = (Taxontreedef) dao.findByReference(Util.getInstance().getTaxonTreeDefId(), Taxontreedef.class);
+        collection = (Collection) dao.findByReference(Util.getInstance().getCollectionId(), Collection.class);
+         
+        int lastCatalogNumber = buildNextCatalognumberByCollection();
+
+        try {
+            JSONObject jsonObj = new JSONObject(json);
+            String fileName = jsonObj.getString("excelfilename");
+            int preparedById = jsonObj.getInt("preparaedById");
+            String preparedByDate = jsonObj.getString("preparedDate");
+            
+            logger.info("prepared data : {} --- {}", preparedById, preparedByDate);
+
+            Map<String, Taxon> taxonMap = new HashMap<>();
+            Map<String, Agent> determinerMap = new HashMap<>();
+            Map<Integer, Collectingevent> cenMap = new HashMap<>(); 
+            Map<String, Preptype> preptypeMep = new HashMap<>();
+            
+            
+            
+            Accumulator accumulator = new Accumulator();
+            accumulator.setTotal(lastCatalogNumber);
+            
+            JSONArray coArray = jsonObj.getJSONArray("coDataList"); 
+            IntStream.range(0, coArray.length())  
+                    .forEach(i -> { 
+                        determinations = new ArrayList<>();
+                        prepartions = new ArrayList<>();
+                        preptype = null;
+                        try {
+                            accumulator.increment();
+                            String catalognumber = String.format("%08d", accumulator.total);
+                             
+                            JSONObject coObject = coArray.getJSONObject(i);
+                            int eventId = coObject.getInt("eventId");  
+                            if(cenMap.containsKey(eventId)) {
+                                event = cenMap.get(eventId);
+                            } else {
+                                event = getCollectingevent(eventId);
+                                cenMap.put(eventId, event);
+                            }
+                             
+                            String determinedByName = coObject.getString("determiner"); 
+                            if(determinerMap.containsKey(determinedByName)) {
+                               determinedBy = determinerMap.get(determinedByName); 
+                            } else {
+                                determinedBy = getDeterminerFromDB(determinedByName);
+                                determinerMap.put(determinedByName, determinedBy);
+                            }
+                            
+                            int determinedDate = coObject.getInt("determinedDate");
+                            String fullName = coObject.getString("computedName");
+                            if(taxonMap.containsKey(fullName)) {
+                               taxon = taxonMap.get(fullName); 
+                            } else {
+                                taxon = getTaxonFromDB(fullName);
+                                taxonMap.put(fullName, taxon);
+                            }
+                             
+                            String media = coObject.getString("media");
+                            if(preptypeMep.containsKey(media)) {
+                                preptype = preptypeMep.get(media);
+                            } else {
+                                preptype = getPreptype(media);
+                                if (preptype == null) {
+                                    preptype = createPreptype(media);
+                                }  
+                                preptypeMep.put(media, preptype); 
+                            }
+                            
+                            
+                            
+                             
+                            int numOfMales = coObject.getInt("numOfMales");
+                            int numOfFeaales = coObject.getInt("numOfFemales");
+                            int total = coObject.getInt("total"); 
+                            int numOfUnknown = getNumOfUnknown(total, numOfMales, numOfFeaales);
+                            
+                            String storage = coObject.getString("storage"); 
+                            String remark =  coObject.getString("remark");
+                            
+                            Collectionobject co = new Collectionobject();
+                            co.setCreatedByAgentID(createdBy);
+                            co.setCatalogNumber(catalognumber);
+                            co.setTimestampCreated(timestamp);
+                            co.setCatalogNumber(fullName);
+ 
+                            determinations.add(buildDetermination(determinedDate));
+                            prepartions.add(buildPreparation(total, storage));
+                            
+                            
+
+                            co.setDeterminationList(new HashSet(determinations));
+
+
+                        } catch (JSONException ex) {
+                            logger.error(ex.getMessage());
+                        } catch (Exception ex) {
+                            logger.error(ex.getMessage());
+                        }
+                    }); 
+            
+        } catch (JSONException ex) { 
+        }
+        return null;
     }
+    
+    private int buildNextCatalognumberByCollection() {
+ 
+        String lastCatalogNumber = dao.getLastCatalogunumber(
+                                        QueryStringBuilder.getInstance()
+                                                .buildGetLastCatalogNumber(Util.getInstance().getCollectionId()));
+        return lastCatalogNumber == null ? 0 : Integer.parseInt(lastCatalogNumber);
+    }
+    
+    private Determination buildDetermination(int determinedDate) {
+        Determination determination = new Determination();
+        determination.setCreatedByAgentID(createdBy);
+        determination.setTimestampCreated(timestamp);
+        determination.setCollectionMemberID(Util.getInstance().getCollectionId());
+        determination.setDeterminedDate(Util.getInstance().convertStringToDate(determinedDate));
+        determination.setIsCurrent(true);
+        determination.setGuid(Util.getInstance().generateGUID().toString());
+        determination.setTaxonID(taxon);
+        determination.setPreferredTaxonID(taxon);
+        determination.setDeterminerID(determinedBy);
+        return determination;
+    }
+    
+ 
+    
+    private Preparation buildPreparation(int total, String storage) {
+        Preparation preparation = new Preparation();
+        preparation.setCreatedByAgentID(createdBy);
+        preparation.setTimestampCreated(timestamp);
+        preparation.setCollectionMemberID(Util.getInstance().getCollectionId());
+        preparation.setCountAmt(total);
+        preparation.setPreparedDate(timestamp);
+        preparation.setPrepTypeID(preptype);
+        preparation.setPreparedByID(createdBy);
+        preparation.setPreparedDatePrecision((short) 1);
+        preparation.setStorageLocation(storage); 
+   
+        return preparation;
+    }
+    
+    
+    private Preptype createPreptype(String media) { 
+        preptype = new Preptype();
+        preptype.setCollectionID(collection);
+        preptype.setCreatedByAgentID(createdBy);
+        preptype.setName(media);
+        preptype.setTimestampCreated(timestamp);
+        
+        return (Preptype) dao.create(preptype);
+    }
+    
+    private Preptype getPreptype(String media) { 
+        return (Preptype)dao.getEntityByJPQL(QueryStringBuilder.getInstance()
+                                    .buildGetPrepType(media, Util.getInstance().getCollectionId()));  
+    }
+    
+    
+    private int getNumOfUnknown(int total, int numOfMale, int numOfFemale) { 
+        int numOfUnknown = total - (numOfMale + numOfFemale);
+        return numOfUnknown < 0 ? 0 : numOfUnknown;
+    }
+    
+    private Taxon getTaxonFromDB(String fullName) {
+        return (Taxon) dao.getEntityByJPQL(
+                                QueryStringBuilder.getInstance()
+                                    .buildGetTaxon(fullName));
+    }
+    
+    private Agent getDeterminerFromDB(String agentName) {
+        
+        String firstName = agentName.split(" ")[0];
+        String lastName = getLastName(agentName);
+        if(agentName.equals("M Forshage")) {
+            firstName = "Mattias";
+            lastName = "Forshage";
+        }
+         
+        Map<String, String> map = new HashMap();
+        map.put("firstName", firstName);
+        map.put("lastName", lastName);
 
+        return (Agent) dao.getEntityByNamedQuery(NAMED_QUERY_GET_AGENT_BY_NAME, map);
+    }
+    
+    private String getLastName(String name) {
+        if (name.contains(" ")) {
+            int index = name.indexOf(" ");
+            return name.substring(index + 1);
+        }
+        return name;
+    }
+    
+    
+    private Collectingevent getCollectingevent(int eventId) {
+        return (Collectingevent) dao.getEntityByJPQL(
+                                QueryStringBuilder.getInstance()
+                                    .buildGetCollectingEventByEventIdAndDisciplineId(eventId, Util.getInstance().getDisciplineId()));
+    }
+     
+    /**
+     * Accumulator class to help accumulator long in foreach statement
+     */
+    public static class Accumulator {
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-
-//    
-//    public int getSmtpAgent(String firstName, String lastName) {
-//        logger.info("getSmtpAgent");
-//
-//        String namedQuery = "Agent.findByName";
-//        Map<String, Object> map = new HashMap<>();
-//        map.put("firstName", firstName);
-//        map.put("lastName", lastName);
-//        map.put("agentType", (short)1); 
-//
-//        List<Agent> agents = dao.getEntitiesByNamedQuery(namedQuery, map);
-//        if (agents == null || agents.isEmpty()) {
-//            return 0;
-//        }
-//        return agents.get(0).getAgentID();
-//    }
-//    
-//    public int validateTaxon(String taxonName, int taxonTreeDefId) {
-//        logger.info("validateTaxon"); 
-//        return dao.getCountByQuery(QueryStringBuilder.getInstance().buildTaxonCountQuery(taxonName, taxonTreeDefId)); 
-//    }
-//    
-//    
-//    
-//    public String getEventsByLocalityId(int localityId) { 
-//        List<Object[]> results = dao.getSearchResultsByJPQL(QueryStringBuilder.getInstance()
-//                                        .buildGetCollectingEventsByLocalityId(localityId));    
-//        return JsonBuilder.getInstance().buildCollectingEventListJson(results); 
-//    }
-//    
-//    public String getEventByEventId(int eventId, int disciplineId) {
-//        logger.info("getEventByEventId : {} -- {}", eventId, disciplineId);
-//         
-//        Object[] results = dao.getListOfDataByJPQL(QueryStringBuilder.getInstance()
-//                                    .buildGetCollectingEventByEventIdAndDisciplineId(eventId, disciplineId));   
-//        return JsonBuilder.getInstance().buildCollectingEventJson(results);
-//    }
-//    
-//    public String getTrapByTrapId(int trapId, int disciplineId) {
-//        logger.info("getTrapByTrapId : {} -- {}", trapId, disciplineId); 
-//        return JsonBuilder.getInstance().buildLocalityJson(
-//                            dao.getListOfDataByJPQL(QueryStringBuilder.getInstance()
-//                                    .buildGetLocalityByTrapIdAndDisciplineId(trapId, disciplineId)));
-//    }
-//    
-//    public int getDeterminationCount(String taxonName, int collectingEventId, int CollectionId) {
-//        return dao.getCountByQuery(QueryStringBuilder.getInstance()
-//                                                .buildNumOfDeterminationsQuery(taxonName, collectingEventId, CollectionId));
-//    }
-//    
-//    
-//    public String getTaxonAndCollectingeventCount(int localityId) {
-//        int ceCount = dao.getCountByQuery(QueryStringBuilder.getInstance()
-//                                        .buildCollectingEventCountByLocalityId(localityId)); 
-//         
-//        List<Object[]> results = dao.getSearchResultsByJPQL(
-//                                    QueryStringBuilder.getInstance()
-//                                            .buildTaxonCountByLocalityId(localityId));   
-//        
-//        return JsonBuilder.getInstance().buildTaxonAndEventCountJson(ceCount, results); 
-//    }
-//    
-//    public List<String> getTaxonNameList(String searchValue, int treeDefId) { 
-//        List<String> results = dao.getStringListByJPQL(
-//                                    QueryStringBuilder.getInstance()
-//                                            .buildGetTaxonListQuery(searchValue, treeDefId));
-//        return results;
-//    }
-//             
-//    public String getTaxonCount(int eventId) {
-//        logger.info("getDataByEventId : {}", eventId);
-//   
-//        List<Object[]> results = dao.getSearchResultsByJPQL(
-//                                    QueryStringBuilder.getInstance()
-//                                        .buildTaxonCountByCollectingeventId(eventId));   
-//        
-//        return JsonBuilder.getInstance().buildTaxonAndEventCountJson(1, results);
-//    }
-//     
-//    public List<EntityBean> findAll(String className) {
-//        return dao.findAll(Collection.class);
-//    }
-//    
-//    public String upload(String json) {
-//        try {
-//            JSONObject jsonObj = new JSONObject(json);
-//            int ceId = jsonObj.getInt("ceId");
-//            int collectionId = jsonObj.getInt("collectionId");
-//            int disciplineId = jsonObj.getInt("disciplineId");
-//            int smtpAgentId = jsonObj.getInt("smtpAgentId");
-//            String sortingDate = jsonObj.getString("sortingDate");
-//            int numOfDeaccessioned = jsonObj.getInt("numOfDeaccesioned");
-//            String group = jsonObj.getString("group");
-//            String loggedInUser = jsonObj.getString("loggedInUser");
-//            
-//            Collectingevent ce = (Collectingevent) dao.findByReference(ceId, Collectingevent.class);
-//            Collection collection = (Collection) dao.findByReference(collectionId, Collection.class);
-//            Discipline discipline = (Discipline) dao.findByReference(disciplineId, Discipline.class);
-//            Agent smtpAgent = (Agent) dao.findByReference(smtpAgentId, Agent.class);
-//            Agent loggedInAgent = getAgentByUserName(loggedInUser);
-//            
-//            
-//            
-//            JSONArray jsonEventArray = jsonObj.getJSONArray("samples");
-//            
-//        } catch (JSONException ex) { 
-//        }
-//        return null;
-//    }
-//
-//    private Agent getAgentByUserName(String userName) {
-//         
-//        if(userName.equals("idali")) {
-//            return (Agent) dao.findByReference(5945, Agent.class);
-//        } else {
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("name", userName);
-//
-//            String namedQuery = "Agent.findBySpecifyUserName";
-//            return (Agent) dao.getEntityByNamedQuery(namedQuery, map);  
-//        } 
-//        
-//    }
-//
-//    public boolean login(String json) {
-//        logger.info("login");
-//        
-//        try { 
-//            JSONObject data  = new JSONObject(json);
-//            String username = data.getString("username"); 
-//            boolean login = data.getBoolean("login");
-//            
-//            timestamp = new Timestamp(System.currentTimeMillis());
-//            Map<String, Object> map = new HashMap<>();
-//            map.put("name", username);
-//            map.put("isLoggedIn", login);
-//            map.put("loginOutTime", timestamp);
-//            map.put("timestampModified", timestamp);
-//             
-//            String namedQuery = "Specifyuser.updateUser";
-//            return dao.updateByNamedquery(namedQuery, map); 
-//        } catch (JSONException ex) {
-//             throw new DinaException(ex.getMessage(), ErrorMsg.getInstance().getBadRequestCode());
-//        }
-//    }
+        private int total = 0;
+          
+        public void increment() {
+            total++;
+        } 
+        
+        public void setTotal(int count) {
+            total = count;
+        }
+    } 
     
 }

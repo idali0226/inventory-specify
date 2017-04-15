@@ -5,7 +5,12 @@
  */
 package se.nrm.dina.dina.inventory.logic.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -27,6 +32,13 @@ public class Util {
     private final int RANK_SUBGENUS_ID = 190;
     private final int RANK_SPECIES_ID = 220;
     private final int RANK_SUBSPECIES_ID = 230;
+    
+    private final int DISCIPLIN_ID = 655360;
+    private final static int COLLECTION_ID = 655361;  
+    private final static int SPECIS_LIST_TAXON_TREE_DEF_ID = 11;
+    private final int AGENT_ID = 5945;
+    
+    private static final DateFormat DATA_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     
     private static Util instance = null;
@@ -74,6 +86,38 @@ public class Util {
                 return RANK_SUBSPECIES_ID; 
             default:
                 return 0;
+        }
+    }
+    
+    public int getDisciplineId() {
+        return DISCIPLIN_ID;
+    }
+    
+    public int getCollectionId() {
+        return COLLECTION_ID;
+    }
+    
+    public int getTaxonTreeDefId() {
+        return SPECIS_LIST_TAXON_TREE_DEF_ID;
+    }
+    
+    public int getAgentId() {
+        return AGENT_ID;
+    }
+    
+    public Date convertStringToDate(int year) {
+        try { 
+            if(year != 0) {
+                String strYear = String.valueOf(year); 
+                if(strYear.length() == 8) {
+                    strYear = StringUtils.substring(strYear, 0, 3);
+                } 
+                return DATA_FORMAT.parse(strYear + "-01-01");
+            } else {
+                return null;
+            } 
+        } catch (ParseException ex) {
+            return null;
         }
     }
 }

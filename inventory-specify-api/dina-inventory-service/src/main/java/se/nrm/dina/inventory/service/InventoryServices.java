@@ -8,13 +8,12 @@ package se.nrm.dina.inventory.service;
 import java.io.Serializable; 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
+import javax.ws.rs.Consumes; 
 import javax.ws.rs.GET; 
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
+import javax.ws.rs.Produces; 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -61,9 +60,26 @@ public class InventoryServices implements Serializable {
          
         return Response.ok(logic.getSmtpAgentList()).build();
     }
-    
-    
  
+    
+    @POST 
+    @Path("/")  
+    @Consumes("application/json")
+    public Response uploadData(String json) { 
+        logger.info("upload : {}", json);
+        logic.upload(json);
+        return Response.ok().build();
+    }
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     @POST 
     @Path("{rank}")  
@@ -137,12 +153,12 @@ public class InventoryServices implements Serializable {
     }
     
     
-    @DELETE
-    public Response deleteOldSMTPData() {
-        
-        logger.info("delete");
-        logic.cleanUp();
-        return Response.ok().build();
-    }
+//    @DELETE
+//    public Response deleteOldSMTPData() {
+//        
+//        logger.info("delete");
+//        logic.cleanUp();
+//        return Response.ok().build();
+//    }
 
 }

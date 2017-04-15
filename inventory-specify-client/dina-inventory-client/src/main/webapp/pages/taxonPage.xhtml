@@ -1,0 +1,82 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"   
+      xmlns:p="http://primefaces.org/ui"  >
+
+    <body>
+        <ui:composition  template="/templates/masterLayout.xhtml">      
+            <ui:define name="windowTitle">
+                Inventory Client Statistic Page
+            </ui:define> 
+            <ui:define name="content"  >  
+                <h:form id="taxonForm"   prependId="false">
+                    <h:panelGroup layout="block" styleClass="statisticresultpanel">
+
+
+                        <h:panelGrid columns="3">
+                            <p:spacer width="700" height="20" />
+                            <h:outputText value="Start page" />  
+                            <p:commandLink action="#{stat.start}"   process="@this">
+                                <h:graphicImage name="images/red_arrow_back.gif" styleClass="imagebutton16" title="Start page"  alt="Start page"/> 
+                            </p:commandLink>
+                        </h:panelGrid>
+
+                        <p><h3>SMTP #{stat.taxonName}</h3></p>
+
+                        <br />
+                        <br />
+
+                        <h:panelGroup  layout="block" style="min-width: 800px; padding-left: 10px;"> 
+                            <h:panelGroup layout="block" style="min-width:  220px; max-width: 220px;  float: left;   ">
+                                <h:outputLabel value="Taxon" style="  margin-left: 10px;" />
+                            </h:panelGroup>
+                            <h:panelGroup layout="block" style="min-width:  170px; float: left; text-align: center;">
+                                <h:outputLabel value="# vials" />
+                            </h:panelGroup>
+                            <h:panelGroup layout="block" style="min-width:  175px; float: left; text-align: center;">
+                                <h:outputLabel value="# trap IDs" />
+                            </h:panelGroup>
+                            <h:panelGroup layout="block" style="min-width:  175px; float: left; text-align: center;">
+                                <h:outputLabel value="# coll IDs" />
+                            </h:panelGroup>
+
+                            <h:panelGroup layout="block" style="min-width:  50px; ">
+                                <p:spacer width="50" height="5" />
+                            </h:panelGroup> 
+                            <hr/>
+                        </h:panelGroup>
+
+
+                        <p:dataTable value="#{stat.taxonList}"   styleClass="smtpTable"  var="taxon"  >
+                            <p:column  style="min-width: 200px; max-width: 200px; ">  
+                                <h:outputLink  value="https://www.dina-web.net/naturarv/?#{stat.dinaPortalUrl}#{taxon.linkName}"  title="Naturarv.se" 
+                                               target="_blank" style=" margin-left: 10px; text-decoration: none; color: #808080;">  
+                                    <h:outputText value="#{taxon.taxonName}" />
+                                </h:outputLink> 
+                            </p:column>
+
+                            <p:column style="min-width: 160px;   text-align: center; "> 
+                                <h:outputText value="#{taxon.numOfVails}"  /> 
+                            </p:column>
+
+                            <p:column style="min-width: 160px;  text-align: center;">
+                                <h:outputText value="#{taxon.numOfTraps}"    /> 
+                            </p:column>
+
+                            <p:column style="min-width: 160px;  text-align: center;">
+                                <h:outputText value="#{taxon.numOfEvents}"    /> 
+                            </p:column>
+
+
+                            <p:column style="min-width: 150px;  text-align: center;">
+                                <p:spacer width="100" height="5" />
+                            </p:column>
+
+                        </p:dataTable>
+
+                    </h:panelGroup>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

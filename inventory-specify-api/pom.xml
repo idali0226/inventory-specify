@@ -43,23 +43,12 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.wildfly.swarm</groupId>
-                <!--<artifactId>bom-all</artifactId>-->
+                <groupId>org.wildfly.swarm</groupId> 
                 <artifactId>bom</artifactId>
                 <version>${version.wildfly.swarm}</version>
                 <type>pom</type>
                 <scope>import</scope>
-            </dependency>
-<!--            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.22</version>
-            </dependency>  
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>1.7.22</version>
-            </dependency>-->
+            </dependency> 
             <dependency>
                 <groupId>javax</groupId>
                 <artifactId>javaee-api</artifactId>
@@ -139,20 +128,7 @@
                     <configuration>
                         <failOnMissingWebXml>false</failOnMissingWebXml>
                     </configuration>
-                </plugin>
-<!--                <plugin>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>wildfly-swarm-fraction-plugin</artifactId>
-      <version>${version.swarm.fraction-plugin}</version>
-      <executions>
-        <execution>
-          <phase>process-classes</phase>
-          <goals>
-            <goal>process</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>-->
+                </plugin> 
             </plugins>
         </pluginManagement>
     </build>

@@ -1,0 +1,412 @@
+/*Helper classes*/
+.nopadding-right {
+    padding-right: 0 !important;
+    margin-right: 0 !important;
+}
+
+.nopadding-left {
+    padding-left: 0 !important;
+    margin-left: 0 !important;
+}
+
+.smallpadding-right {
+    padding-right: 2px;
+    margin-right: 0 !important;
+}
+
+.smallpadding-left {
+    padding-left: 2px;
+    margin-left: 0 !important;
+}
+
+.line-darker {
+    border-top: 1px solid #ddd;
+}
+.spacy-top {
+    margin-top: 20px;
+}
+.text-primary {
+    color: #03729a;
+}
+.text-strong {
+    font-weight: bold;
+}
+.text-strong-semidark {
+    color: #777;
+    font-weight: bold;
+}
+.required.control-label:after {
+    content: "*";
+    color: #000;
+}
+.small-active {
+    color: #000; 
+}
+/*Font*/
+body {
+    font-family: arial, sans-serif;
+}
+
+/*Headings customizations*/
+h1,
+h2,
+h3,
+h4,
+h5 {
+    font-family: "trebuchet ms", sans-serif;
+}
+h1 {
+    margin-top: 0px;
+    font-size: 30px;
+}
+h3 {
+    margin-top: 10px;
+}
+
+
+/*Some specials..*/
+#unsavedrunsalert {
+    margin-top: 20px;
+}
+#login-overlay .modal-content {
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    border-color: #ccc;
+}
+a.inputa,
+a.inputa:focus,
+a.inputa:hover {
+    color: #000;
+    text-decoration: none;
+}
+
+/*Tables*/
+.fixed-table-container tbody td,
+.fixed-table-container tbody th {
+    background-color: #eee;
+}
+.bootstrap-table {
+    background-color: #fdfdfd;
+}
+div#table1container .bootstrap-table .fixed-table-body,
+div#table2container .bootstrap-table {
+    border: 1px solid #ccc;
+    padding: 5px;
+    border-radius: 2px;
+}
+div#table1container .detail-view .bootstrap-table .fixed-table-body {
+    border: none;
+    padding: 0;
+}
+.bootstrap-table .table-hover > tbody > tr:hover > td {
+    background-color: #C9DBE4;
+}
+.bootstrap-table .table-hover > tbody > tr.detail-view:hover > td {
+    background-color: #f9f9f9;
+}
+.fixed-table-container tbody .selected td,
+.fixed-table-container tbody tr.selected + tr.detail-view td,
+.fixed-table-container tbody tr.selected + tr.detail-view th,
+.fixed-table-container tbody tr.selected + tr.detail-view caption {
+    background-color: #d9edf7;
+    border-right-color: #d9edf7;
+}
+#table1 table,
+.detail-view caption,
+.detail-view,
+.detail-view tbody td,
+.fixed-table-container tbody .detail-view td,
+.fixed-table-container tbody .detail-view th {
+    background-color: #f9f9f9;
+}
+.detail-view th {
+    color: #777;
+    font-weight: normal;
+    padding-top: 0;
+}
+.detail-view caption {
+    padding-top: 0;
+    padding-bottom: 3px;
+    font-weight: bold;
+}
+.detail-view .bootstrap-table {
+    background-color: transparent;
+}
+.detail-view .panel.panel-default {
+    margin: 20px;
+}
+th.text-strong-semidark {
+    color: #000
+}
+.bootstrap-table .table:not(.table-condensed) > tbody > tr.detail-view >td {
+    padding: 0 !important;
+}
+.controlcol {
+    padding-top: 20px;
+}
+
+/* Special table on review page */
+.reviewtable th,
+.reviewtable td {
+    border-top: none !important;
+    border-bottom: none !important;
+}
+h4.reviewheading {
+    width: 100%;
+    color: #555;
+    padding-bottom: 3px;
+}
+h5.reviewheading {
+    font-family: arial, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+/*Forms*/
+textarea {
+    resize: vertical;
+}
+.input-group-btn .btn-group {
+    display: flex !important;
+}
+.btn-group .btn {
+    border-radius: 0;
+    margin-left: -1px;
+}
+.btn-group .btn:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+.btn-group .form-horizontal .btn[type="submit"] {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+.form-group .form-control:last-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+/*Progress indicator list*/
+ol.progress-list {
+    counter-reset: li;
+    list-style: none;
+    *list-style: decimal;
+    /* Keep using default numbering for IE6/7 */  
+    font: 15px "Trebuchet MS", arial, sans-serif;
+    padding: 0;
+    margin-left: -0.5em;
+}
+ol.progress-list ol {
+    margin: 0 0 0 0em;
+}
+.progress-list li {
+    margin-bottom: 5px;
+    padding: 0 0 0em 1.84em;
+    position: relative;
+    margin-left: 10px;
+    float: left;
+}
+
+.progress-list p {
+    position: relative;  
+    padding: 5px 7px 5px 7px;
+    *padding: .4em;
+    margin: 0em 0;
+    color: #999999;
+    text-decoration: none;
+    border-radius: .3em;
+    transition: all .3s ease-out;
+}
+.progress-list p:before {
+    content: counter(li);
+    counter-increment: li;
+    position: absolute;
+    left: -32px;
+    top: 45%;
+    margin-top: -1.2em;
+    background-color: #9D9D9D;
+    height: 35px;
+    width: 35px;
+    line-height: 26px;
+    border: 5px solid #fff;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 35px;
+    transition: all .3s ease-out;
+    color: #fff;
+    text-shadow: 0 0.5px 0 #999;
+    border-color: #DDD;
+    font-size: 95%;
+}
+
+.progress-list p.active:before {
+    background: #31B0D5;
+    color: #fff;
+    text-shadow: 0 0.5px 0 #269abc;
+}
+.progress-list p.done:before {  
+    background-color: #777;  
+    color: #fff;
+    text-shadow: none;
+}
+.progress-list p.done {
+    color: #000;
+}
+.progress-list p.active {
+    color: #000;
+    font-weight: bold;
+}
+.progress-list span.glyphicon-arrow-right:before {
+    margin-left: 12px;
+}
+
+/*Fixes for transparency*/
+#container1 {
+    overflow: hidden;
+}
+
+/*Transparency, whole page*/
+.transparency {
+    opacity: 0.90;
+    filter: alpha(opacity=90);
+    -moz-opacity: 0.90;
+    width: 970px;
+    height: 3500px;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    z-index: -1;
+    background-color: #fff;
+}
+
+/*Gradient, after footer*/
+#grad1 {
+    height: 430px;
+    width: 970px;
+    margin: 0 auto;
+    border-radius: 0 0 10px 10px;
+    background: -webkit-linear-gradient(top, rgba(8, 8, 8, 1), rgba(0, 0, 0, 0));
+    /* For Safari 5.1 to 6.0 */
+    
+    background: -o-linear-gradient(top, rgba(8, 8, 8, 1), rgba(0, 0, 0, 0));
+    /* For Opera 11.1 to 12.0 */
+    
+    background: -moz-linear-gradient(top, rgba(8, 8, 8, 1), rgba(0, 0, 0, 0));
+    /* For Firefox 3.6 to 15 */
+    
+    background: linear-gradient(from top, rgba(8, 8, 8, 1), rgba(0, 0, 0, 0));
+    /* Standard syntax (must be last) */
+}
+
+/*Adding some height to pages that need it*/
+.main-row {
+    min-height: 400px;
+}
+
+/*Logos - NRM and Vegadare*/
+.logo {
+    float: right;
+}
+.header .logo {
+    margin-bottom: 0px;
+}
+
+/*Accordion*/
+.disabled-accordion:active,
+.disabled-accordion:hover,
+.disabled-accordion:visited,
+.disabled-accordion:link {
+    text-decoration: none;
+}
+a.disabled-accordion.accordion-toggle {
+    color: #999;
+}
+
+/* Custom body */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-image: url(../images/Nordsim_090506_1_SW_dark_gradient_small4.jpg);
+}
+
+/* Custom page header */
+.header {
+    padding-top: 35px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #e5e5e5;
+    background-color: #fff;
+}
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    line-height: 40px;
+    font-size: 38px;
+}
+.header h3 small {
+    display: block;
+    margin-top: 3px;
+    font-size: 16px;
+}
+
+/* Custom page footer */
+.footer {
+    margin-top: 20px;
+    margin-left: -35px;
+    padding-top: 19px;
+    padding-bottom: 10px;
+    border-top: 1px solid #e5e5e5;
+    border-radius: 0px;
+    color: #fff;
+    background-color: #080808;
+    height: 90px;
+    position: relative;
+}
+.footer a {
+    color: #fff;
+}
+.header,
+.footer {
+    padding-left: 35px;
+    padding-right: 35px;
+}
+.header,
+.navbar,
+.footer {
+    margin-left: -35px;
+    width: 970px;
+}
+
+.navbar-collapase {
+    padding-left: 0px;
+}
+.navbar {
+    padding-left: 0px;
+}
+
+/*Media query for non-responsive page*/
+
+@media (min-width: 1px) {
+    .modal-dialog {
+        width: 600px;
+        margin: 20px auto;
+    }
+    .dl-horizontal dt {
+        text-align: left;
+    }
+    .container {
+        width: 970px;
+        padding: 0 35px;
+        border-radius: 5px 5px 0 0;
+        position: relative;
+    }
+    .modal-lg {
+        width: 900px;
+    }
+    .lead.emphasis-lead {
+        font-size: 16px;
+        font-style: italic;
+    }
+    .lead-smaller {
+        font-size: 16px;
+    }
+}

@@ -37,8 +37,8 @@ public interface SMTPDao<T extends EntityBean> {
     public T getEntityByNamedQuery(String namedQuery, Map<String, Object> map);
 
 
-    
-    
+   
+    public String getLastCatalogunumber(String jpql);
     
     
     

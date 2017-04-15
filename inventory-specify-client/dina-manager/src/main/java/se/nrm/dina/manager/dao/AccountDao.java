@@ -62,19 +62,19 @@ public class AccountDao implements Serializable {
             logger.error(e.getMessage());
         } catch (javax.persistence.PersistenceException ex) { 
             logger.error("PersistenceException : {}", ex.getMessage());
-            if (ex.getCause() instanceof  org.hibernate.exception.ConstraintViolationException) {  
-                org.hibernate.exception.ConstraintViolationException e = (org.hibernate.exception.ConstraintViolationException) ex.getCause();
-                throw new ManagerException(handleHibernateConstraintViolation(e), 400); 
-            }
+//            if (ex.getCause() instanceof  org.hibernate.exception.ConstraintViolationException) {  
+//                org.hibernate.exception.ConstraintViolationException e = (org.hibernate.exception.ConstraintViolationException) ex.getCause();
+//                throw new ManagerException(handleHibernateConstraintViolation(e), 400); 
+//            }
         } catch (Exception e) { 
             logger.error(e.getMessage());
         }
         return tmp;
     }
 
-    private String handleHibernateConstraintViolation(org.hibernate.exception.ConstraintViolationException e) {
-        return getRootCause(e).getMessage();
-    }
+//    private String handleHibernateConstraintViolation(org.hibernate.exception.ConstraintViolationException e) {
+//        return getRootCause(e).getMessage();
+//    }
 
     private Throwable getRootCause(final Throwable throwable) {
         final List<Throwable> list = getThrowableList(throwable);

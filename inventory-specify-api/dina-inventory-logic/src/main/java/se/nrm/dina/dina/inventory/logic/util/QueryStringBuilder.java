@@ -27,6 +27,23 @@ public class QueryStringBuilder {
         return instance;
     }
     
+    
+    
+    public String buildGetCollectingEventByEventIdAndDisciplineId(int eventId, int disciplineId) {
+        
+        sb = new StringBuilder();  
+        
+        sb.append("SELECT ce "); 
+        sb.append("FROM Collectingevent ce "); 
+        sb.append("WHERE ce.stationFieldNumber = 'Event ID "); 
+        sb.append(eventId);
+        sb.append("' AND ce.disciplineID.userGroupScopeId= ");
+        sb.append(disciplineId);    
+        return sb.toString();
+    }
+    
+     
+    
     public String buildGetSmtpAgentList() { 
         return "SELECT a.agentID, a.firstName, a.lastName, a.remarks FROM Agent AS a WHERE a.agentType = 1 AND a.remarks like '%smtp%'"; 
     } 
@@ -69,18 +86,42 @@ public class QueryStringBuilder {
         sb.append(" AND t.fullName = '");
         sb.append(fullName); 
         sb.append("' AND t.isAccepted = true");
-         
-        logger.info("jpql : {}", sb.toString());
+          
         return sb.toString();
     }
     
-    
-    
-    
-    
-    
-    
-    
+    public String buildGetTaxon(String fullName) {
+        
+        logger.info("buildGetTaxon");
+        
+        sb = new StringBuilder();
+        sb.append("SELECT t FROM Taxon AS t ");
+        sb.append("WHERE t.taxonTreeDefID.taxonTreeDefID = 11"); 
+        sb.append(" AND t.fullName = '");
+        sb.append(fullName);
+        sb.append("'");
+       
+        return sb.toString();
+    }
+
+    public String buildGetPrepType(String media, int collectionId) {
+        sb = new StringBuilder();
+        sb.append("SELECT p ");
+        sb.append("FROM Preptype p ");
+        sb.append("WHERE p.name = '");
+        sb.append(media);
+        sb.append("' AND p.collectionID.userGroupScopeId = ");
+        sb.append(collectionId);
+        return sb.toString();
+    }
+
+    public String buildGetLastCatalogNumber(int collectionId) {
+        sb = new StringBuilder();
+        sb.append("SELECT c.catalogNumber FROM Collectionobject AS c where c.collectionID.userGroupScopeId = ");
+        sb.append(collectionId);
+        sb.append(" ORDER BY c.collectionObjectID desc");
+        return sb.toString();
+    }
     
     
     
@@ -210,21 +251,7 @@ public class QueryStringBuilder {
         return sb.toString(); 
     }
     
-    public String buildGetCollectingEventByEventIdAndDisciplineId(int eventId, int disciplineId) {
-        
-        sb = new StringBuilder();  
-        
-        sb.append("SELECT ce.stationFieldNumber, ce.startDate, ce.endDate, ce.collectingEventID, lc.localityName, lc.lat1Text, lc.long1Text, lc.shortName "); 
-        sb.append("FROM Collectingevent ce ");
-        sb.append("JOIN ce.localityID lc "); 
-        sb.append("WHERE lc = ce.localityID ");
-        sb.append("AND ce.stationFieldNumber = 'Event ID ");
-        sb.append(eventId);
-        sb.append("' AND ce.disciplineID.userGroupScopeId= ");
-        sb.append(disciplineId);   
-        sb.append(" AND lc.shortName is not null"); 
-        return sb.toString();
-    }
+
     
     public String buildGetTaxonListQuery(String searchValue, int treeDefId) {
         sb = new StringBuilder();

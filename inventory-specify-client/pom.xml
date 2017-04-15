@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+         lns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
       
@@ -24,136 +26,81 @@
     </developers>
   
     <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding> 
-        <skip.tests>false</skip.tests> 
-        <hibernate.version>5.2.6.Final</hibernate.version>
-        <!--<version.wildfly.swarm>2017.3.3</version.wildfly.swarm>-->
-        <version.wildfly.swarm>1.0.0.Final</version.wildfly.swarm>
-        
-        <version.swarm.fraction-plugin>40</version.swarm.fraction-plugin>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <javax.ejb.version>3.2</javax.ejb.version>
+        <slf4j.version>1.7.25</slf4j.version> 
+        <skip.tests>false</skip.tests>
+        <jaxws-maven-plugin.version>1.12</jaxws-maven-plugin.version>
+        <maven-ejb-plugin.version>2.4</maven-ejb-plugin.version> 
+        <maven-javadoc-plugin.version>2.7</maven-javadoc-plugin.version>  
     </properties>
  
     <modules>   
         <module>dina-manager</module>
-    <module>dina-inventory-client</module>
-  </modules>
-    
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.wildfly.swarm</groupId>
-                <!--<artifactId>bom-all</artifactId>-->
-                <artifactId>bom</artifactId>
-                <version>${version.wildfly.swarm}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-<!--            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-                <version>1.7.22</version>
-            </dependency>  
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>1.7.22</version>
-            </dependency>-->
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>7.0</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
-    
-        
+        <module>dina-inventory-client</module>
+    </modules>
+      
     <dependencies>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.22</version>
+            <version>${slf4j.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.22</version>
+            <version>${slf4j.version}</version>
         </dependency>
         
-        <dependency>
-            <groupId>org.testng</groupId>
+        <!--<dependency>-->
+<!--            <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>6.9.10</version>
             <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.10.19</version>
-            <scope>test</scope>
-        </dependency> 
-        
-        <dependency>
-            <groupId>org.powermock</groupId>
-            <artifactId>powermock-module-junit4</artifactId>
-            <version>1.6.5</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
-            <version>1</version>
-            <scope>provided</scope>
-        </dependency>
-        
-        <dependency>
-            <groupId>javax.enterprise</groupId>
-            <artifactId>cdi-api</artifactId>
-            <version>2.0.Beta1</version>
-            <scope>provided</scope>
-        </dependency>
-        
+        </dependency> -->
+         
     </dependencies>
     
-    <build>
-        <!--<finalName>inventory-web</finalName>-->
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.6.1</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-war-plugin</artifactId>
-                    <version>3.0.0</version>
-                    <configuration>
-                        <failOnMissingWebXml>false</failOnMissingWebXml>
-                    </configuration>
-                </plugin>
-<!--                <plugin>
-      <groupId>org.wildfly.swarm</groupId>
-      <artifactId>wildfly-swarm-fraction-plugin</artifactId>
-      <version>${version.swarm.fraction-plugin}</version>
-      <executions>
-        <execution>
-          <phase>process-classes</phase>
-          <goals>
-            <goal>process</goal>
-          </goals>
-        </execution>
-      </executions>
-    </plugin>-->
-            </plugins>
-        </pluginManagement>
-    </build>
+    <build> 
+        <plugins>
 
- 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin> 
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>3.2</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <!-- Default configuration for all reports -->
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>aggregate</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <phase>site</phase>
+                        <configuration>
+                            <!-- Specific configuration for the aggregate report -->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin> 
+        </plugins> 
+    </build> 
 </project>

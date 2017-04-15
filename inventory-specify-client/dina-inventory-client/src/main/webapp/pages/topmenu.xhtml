@@ -1,0 +1,41 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:p="http://primefaces.org/ui"     
+      xmlns:h="http://java.sun.com/jsf/html"   >
+
+    <h:body> 
+        <ui:composition>        
+            <h:panelGrid styleClass="topmenu" cellpadding="0" cellspacing="0"  >
+                <h:form  id="tommenuform" prependId="false">   
+                    <h:panelGrid id="topmenupanel" columns="2"  cellpadding="0" cellspacing="0"  >
+                        <h:panelGrid width="750px;"  cellpadding="0" cellspacing="0" style="text-align: left; "> 
+                            <h:panelGroup>
+                                <ul>
+                                    <li>     
+                                        <p:commandLink actionListener="#{navigate.speciesListPage()}" value="Home" styleClass="#{styleBean.menu1}" 
+                                                       process="@this" global="false" update="@all"   /> 
+                                    </li>  
+                                </ul>   
+                            </h:panelGroup>  
+                        </h:panelGrid>
+
+                        <h:panelGrid style="float: right; text-align: right; " columns="2"  cellpadding="0" cellspacing="0"  id="logout">   
+                            <h:panelGrid  cellpadding="0" cellspacing="0" columns="2"  rendered="#{not empty request.remoteUser}" >    
+                                <p:panelGrid style="width: 100px; text-align: right; float: right; padding-right: 10px; ">
+                                    <p:outputLabel value="#{msg.loginname} #{request.userPrincipal.name}" styleClass="logintext" />  
+                                </p:panelGrid> 
+                                <p:panelGrid style="width: 80px; text-align: right; float: right; padding-right: 10px; ">
+                                    <p:commandLink action="#{login.logout()}"  value="#{msg.logoutlink}" update="@all"  style="border: none;" />  
+                                </p:panelGrid> 
+                            </h:panelGrid>  
+                        </h:panelGrid> 
+
+                    </h:panelGrid>  
+                    <h:panelGroup styleClass="imgswitch" id="imgswitchPanel">
+                        <p:graphicImage value="#{imageBeans.image}" styleClass="img"   /> 
+                    </h:panelGroup> 
+                </h:form> 
+            </h:panelGrid>
+        </ui:composition>
+    </h:body>
+</html>

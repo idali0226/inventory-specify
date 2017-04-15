@@ -1,0 +1,49 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:p="http://primefaces.org/ui"  >
+
+    <h:body>  
+        <ui:composition template="./../templates/masterLayout.xhtml">
+
+            <ui:define name="windowTitle">
+                Inventory Client Login
+            </ui:define> 
+
+            <ui:define name="content">     
+
+                <h:form id="login"  onsubmit="document.#{p:component('login')}.action = 'j_security_check';" prependId="false">   
+                    <br />  
+ 
+                    <h:panelGroup id="loginmainpanel" styleClass="row"> 
+                        <h:panelGroup id="loginpanel"  layout="block" style="text-align: center;  width:  600px; margin-left: auto; margin-right: auto;">
+                            
+                            <br />
+                            <br /> 
+                            <p><h2>Login</h2></p>
+                  
+                            <p:messages autoUpdate="true" showDetail="true" showSummary="false" closable="true"   showIcon="true" /> 
+                            <br />
+                            
+                            <p:focus context="loginpanel"/>  
+                            <p:inputText value="#{login.username}" size="40" placeholder="Username" required="true" requiredMessage="Username is required." />
+                            <p:password value="#{login.password}" size="40" placeholder="Password" required="true" requiredMessage="Password is required."  />
+
+                            <br /> 
+                            <br /> 
+                            
+                            <p:commandButton ajax="false" id="loginButton" value="Login" action="#{login.login()}" 
+                                             process="loginpanel" styleClass="defaultbutton" />  
+                            <p:defaultCommand target="loginButton" />
+                        </h:panelGroup> 
+                    </h:panelGroup>
+
+                    <br />
+                    <br />
+                </h:form> 
+
+            </ui:define>
+        </ui:composition>
+    </h:body>
+</html>

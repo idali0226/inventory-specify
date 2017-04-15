@@ -1,0 +1,931 @@
+/* 
+    Document   : default.css
+    Created on : 2014-09-23
+    Author     : Ida Li
+    Description: Based on NRMs graphisc profile and pollenrapporten -sitevision.
+    Stylesheet for Inventory Client, NRM
+*/
+
+
+.body{
+    font-family: "Arial",sans-serif;
+    position: relative; 
+    min-height: 100%; 
+    top: 0px;
+}
+
+.templet {
+    width: 960px; 
+    margin: auto;
+}
+ 
+label {
+    font-weight: normal;
+    /*padding-left: 20px;*/ 
+}
+
+.inputa label {
+    padding-left: 20px;
+}
+
+/*.pageTitle {
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}*/
+
+.nextbtnpanel {
+    width: 120px;
+    float: right; 
+}
+
+.collectionRadioPanel {   
+    width: 500px;
+    margin-left: auto;
+    margin-right: auto; 
+    text-align: center;
+}
+
+.batchprocessingpanel {
+    width: 860px;
+    margin-left: auto;
+    margin-right: auto; 
+    margin-bottom: 40px;
+    font-family: "Arial",sans-serif;
+}
+
+.defaultbutton .ui-button-text {
+    background-color: #419b1a; 
+    font-size: 12pt;
+    font-weight: normal;
+    color: #FFFFFF;
+}
+
+.editSampleListBtn .ui-button-text {
+    float: right;
+    background-color: #419b1a; 
+    font-size: 11pt;
+    font-weight: normal;
+    color: #FFFFFF;
+}
+ 
+.statisticpanel { 
+    width: 650px; 
+    margin-left: auto;
+    margin-right: auto; 
+    font-family: "Arial",sans-serif;
+    background: url('../resources/images/SMTPflies.jpg') no-repeat scroll right center transparent; 
+}
+
+.statisticresultpanel {
+    width: 800px;  
+    vertical-align: top;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 12px;  
+    font-family:  "Arial",sans-serif !important; 
+}
+
+.linkToStart {
+    float: right;
+    text-align: right;
+    padding-right: 20px;
+}
+
+
+
+  
+.sortinggrouppanel {
+    width: 650px;  
+    margin-left: auto;
+    margin-right: auto; 
+    font-family: "Arial",sans-serif;
+    background: url('../resources/images/SMTPwasp.jpg') no-repeat scroll right center transparent; 
+}
+ 
+.groupFieldset { 
+    width: 400px;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    font-size: 12px; 
+    font-family: "Arial",sans-serif;
+}
+
+
+.groupFieldset .ui-fieldset-legend { 
+    padding: 5px 10px 5px 10px;
+    font-weight: bold;
+    font-size: 14px;    
+    border: none;
+    background: transparent;
+}
+ 
+.ui-accordion-header  {
+    background: transparent;
+    font-size: 14px;
+    font-family: "Arial",sans-serif; 
+    font-weight: bold; 
+    width: 400px; 
+}
+
+ui-accordion-content {
+    background: transparent;
+    font-size: 12px;
+    font-family: "Arial",sans-serif; 
+    width: 400px; 
+}
+
+.contenttext {
+    font-family: "Arial",sans-serif; 
+    font-size: 12px; 
+}
+
+.defaultboldtext {
+    font-weight: bold;
+    font-size: 12px;
+    font-family: "Arial",sans-serif;
+}
+ 
+.ui-datatable table {
+   table-layout: auto !important;
+}
+
+
+.smtpTable {
+    font-size: 11px;
+    font-family:  Arial,sans-serif !important; 
+}
+ 
+.imagebutton16 {
+    width: 16px;
+    height: 16px;
+    padding: 5px;
+    border: none; 
+    float: left;
+    cursor: pointer;
+}
+
+.imagebuttonpadding2 {
+    width: 16px;
+    height: 16px; 
+    border: none; 
+    float: left;
+    padding-top: 2px;
+    padding-right: 5px;
+    cursor: pointer;
+}
+
+/*.ui-button-text {
+    background-color: #419b1a;
+    font-size: 9pt;
+    color: #FFFFFF;
+}
+
+.ui-button-text-only .ui-button-text {
+    font-size: 9pt; 
+    color: #FFFFFF;
+}*/
+ 
+.defaultpanelcss {   
+    padding-left: 20px;
+    font-size: 11px;
+    font-family: "Arial",sans-serif;
+}
+ 
+.imagebutton {
+    width: 32px;
+    height: 32px; 
+    border: none; 
+    cursor: pointer;
+}
+
+
+
+/*************************** div ***********************************/  
+.fulldiv { 
+    width: 100%; 
+} 
+
+
+ 
+
+.excelfileuploadpanel {
+    padding-left: 40px; 
+    width: 900px;
+    font-family: "Arial",sans-serif; 
+}
+
+
+.observationpanel {
+    padding-left: 40px; 
+    width: 900px; 
+    font-size: 12px; 
+    font-family: "Arial",sans-serif; 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.main {
+    background-color:#ffffff;
+    margin:0 auto;
+    max-width:960px; 
+    padding:30px 0 30px 0;
+}
+
+
+
+ 
+ 
+
+
+
+
+
+.logonrm {   
+    margin-right: 20px;
+    float: right;
+    border-style: none;
+}
+
+ 
+
+/* header */ 
+.headertitle {
+    font-size: 46px;
+    color: #FFFFFF;
+    text-align: left;
+    margin-left: 20px;
+    font-family:   serif;
+    font-style: italic;  
+}
+
+
+/*top*/
+.roundedtop {
+  -webkit-border-radius: 15px 15px 0px 0px;
+  border-radius: 15px 15px 0px 0px;    
+}
+
+.top {
+    background-color: #9bba3f; 
+    margin:0 auto;
+    max-width:960px;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom: 20px;
+    padding-top: 20px; 
+}
+
+
+.topmenu {
+    background-color: #839127; 
+    width:960px;
+}
+
+
+.topmenu a.current {
+    background: none repeat scroll 0 0 #419b1a; /*#0C7D0C;*/
+}
+
+.topmenu a {
+   width: auto;
+   padding: 12px 10px;
+   border-right: none;
+   border-right: 1px solid #4b7533;
+   color: #FFFFFF;
+   display: block;
+   font-family: "Arial",sans-serif;
+   font-size: 14px;
+   text-align: center;
+   text-decoration: none;
+   text-shadow: 1px 2px 1px #436b16; 
+   /* filter: dropshadow(color=#2e5900, offx=1, offy=1);*/
+}
+
+ 
+.topmenu li {
+   overflow: hidden;
+   position: relative;
+   float: left;
+   display: block;
+   width: auto;
+}
+
+.topmenu ul {
+    list-style-type: none;
+    margin: 0;
+    overflow: auto;
+    padding: 0;
+}
+
+.menubutton {
+    color:#ffffff;
+    margin-top:-4px;
+    padding-bottom:5px;
+    padding-left:10px;
+}
+
+ 
+
+.imgswitch {
+    width: 960px; 
+    margin-bottom: -5px; 
+}
+
+
+
+
+
+
+
+.collectionFieldset {
+    background: #F2F2F2;
+    padding-left: 20px;
+    padding-bottom: 10px;
+    font-size: 11px;
+    font-family: "Arial",sans-serif;
+}
+
+.collectionFieldset .ui-fieldset-legend {
+    background: #585858;
+    padding: 5px 10px 5px 10px;
+    font-weight: bold;
+    font-size: 12px;
+    color: #FFFFFF;   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.collectionlistradio {
+    font-size: 12px;
+    font-family: "Arial",sans-serif; 
+    padding: 10px;
+}
+
+
+
+
+
+/* text wrap in datatable */
+.fixed-size {
+    table-layout: fixed;
+    word-wrap: break-word;
+}
+
+.logintext { 
+    font-family: arial,helvetica,sans-serif;
+    color: #FFFFFF;
+    font-size: 12px; 
+}
+
+.whitetext { 
+    padding-left: 20px;
+    padding-top: 5px;
+    font-family: arial,helvetica,sans-serif;
+    color: #FFFFFF; 
+    font-size: 16px; 
+    font-weight: bold; 
+}
+
+
+
+.clink { 
+    font-family: arial,helvetica,sans-serif;
+    color: #686868;
+    font-size: 12px;
+    text-decoration: none;
+}
+
+
+
+ 
+
+
+
+
+
+.defaulttext { 
+    font-size: 12px;
+    font-family: "Arial",sans-serif;
+}
+
+.redtext { 
+    font-size: 12px;
+    font-family: "Arial",sans-serif;
+    color: #FF0000;
+}
+
+
+.smalltext { 
+    font-size: 11px;
+    font-family: "Arial",sans-serif;
+}
+
+
+
+
+
+
+.inprocess {
+    font-size: 16px; 
+    font-weight: bold;
+}
+
+
+
+
+
+/* footer */ 
+#foot {
+    position: absoulte;
+    bottom: 0;
+    height: 125px;
+}
+
+ 
+
+.footstyle{
+    background-color:#686868;
+    margin:0 auto;
+    width:960px;
+    padding-bottom:20px;
+    padding-left:10px;
+    padding-right:10px;
+    -webkit-border-radius: 0px 0px 15px 15px;
+    border-radius: 0px 0px 15px 15px; 
+    float: left;
+    width: 100%;
+}
+
+.textfoot{ 
+    font-size: 12px;
+    color:#ffffff;
+    font-family: "Arial",sans-serif;   
+}
+
+.labeltext {
+    font-family: "Arial",sans-serif; 
+    font-size: 16px;
+    font-weight: bold;
+}
+
+
+
+.errortext {
+    font-family: "Arial",sans-serif; 
+    font-size: 12px; 
+    color: #FF0000;
+}
+
+
+/* font style */
+.text {
+    font-family: "Arial",sans-serif;
+    color: #424242; 
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+
+
+
+.subsubtitle {
+    font-size: 14px;
+    font-weight: bold;
+    font-family: "Arial",sans-serif;
+}
+
+
+
+
+
+.originalbutton .ui-button-text {
+    background:  #D2CFCF;
+    color: #000000;
+}
+
+
+.originalbutton .ui-widget-header {
+    border: solid 1px;
+    /*background: transparent;*/
+    width: 700px;
+}
+ 
+
+.largebutton .ui-widget-content  { 
+    border:   solid  1px !important;
+    font-size: 12px !important;
+    font-family:  Arial,sans-serif !important; 
+}
+
+
+.ui-radiobutton .ui-radiobutton-box { 
+    bottom: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    line-height: 12px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    border-radius: 8px;
+}
+
+
+
+.ui-widget-header {
+     background:  #FFFFFF;
+     border: none;
+}
+
+
+.ui-widget-content { 
+    /*border: none !important;*/
+    font-size: 12px !important;
+    font-family:  Arial,sans-serif !important; 
+}
+
+
+/*.loginPanel .ui-widget-header {
+    background-color: #86AD16;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold; 
+}
+
+
+
+.loginPanel .ui-widget-content { 
+    background-color: #F2F2F2; 
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 12px; 
+}
+
+.loginmainpanel {
+    padding: 10px 10px 20px 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; 
+    width: 500px;
+}*/
+
+
+.testversionpanel {
+    padding: 10px 10px 20px 20px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; 
+    width: 350px;
+}
+
+
+.excelfileuplaodpanel { 
+    font-size: 12px; 
+    font-family:  Arial,sans-serif !important; 
+}
+
+ 
+
+.ui-fileupload-buttonbar.ui-button-text {
+    color: #000000;
+}
+  
+
+ 
+
+ 
+.treetext {
+    font-size: 11px; 
+    font-family:  Arial,sans-serif !important; 
+}
+
+.treesynomnytext {
+    font-size: 11px; 
+    font-family:  Arial,sans-serif !important; 
+    color: #4B8A08;
+    padding-left: 5px;
+}
+
+
+
+.paddingleftdiv10 {
+    padding-left: 10px;  
+    float: left;
+}
+
+
+.paddingrightdiv {
+    padding-right: 20px;
+}
+
+
+
+
+.cancellistpanel {
+    width: 100px;
+    float: left;
+} 
+
+
+
+.alignTop {
+    vertical-align:top;
+}
+
+
+.alignTop1 {
+    vertical-align:top;
+    width: 18px;
+}
+
+ 
+
+
+
+.inventorypanel {
+    width: 800px;
+    margin-left: auto;
+    margin-right: auto;  
+    margin-left: 20px;
+}
+
+
+
+.samplelistpanel {
+    width: 940px;  
+    vertical-align: top;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 12px; 
+    font-weight: bold;
+    font-family:  Arial,sans-serif !important; 
+}
+
+
+ 
+
+.commondatapanel {
+    width: 880px;  
+    vertical-align: top;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 12px; 
+    font-weight: bold;
+    font-family:  Arial,sans-serif !important; 
+}
+
+.addNewSamplePanel {
+    width: 790px;  
+    vertical-align: top;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 12px; 
+    font-weight: bold;
+    font-family:  Arial,sans-serif !important; 
+}
+
+
+
+
+.progressresultpanel {
+    width: 900px;  
+    vertical-align: top;
+    margin-right: auto;
+    margin-left: auto;
+    font-size: 12px;  
+    font-family:  "Arial",sans-serif !important; 
+}
+
+
+
+
+
+.addbutton {
+    background: transparent url('../resources/images/add.png') no-repeat center; 
+}
+
+.removebutton {
+    background: transparent url('../resources/images/button_remove.gif') no-repeat center; 
+}
+
+.editbutton {
+    background: transparent url('../resources/images/edit_icon.gif') no-repeat center; 
+    padding: 0 30px 0 30px; 
+}
+
+.canceleditbutton {
+    background: transparent url('../resources/images/delete.png') no-repeat center; 
+}
+
+
+
+.backbutton {
+    background: white url('../resources/images/red_arrow_back.gif') no-repeat center; 
+}
+
+
+
+
+
+
+
+
+
+
+
+/*.smtpTable.ui-datatable .ui-row-editor .ui-icon-pencil { 
+    background: url('../resources/images/edit_icon.gif') no-repeat center !important; 
+    background-position: center center !important; 
+    height: 20px;
+    margin-top: -3px;
+}
+ 
+
+.smtpTable.ui-datatable .ui-row-editor .ui-icon-check { 
+    background: url('../resources/images/Checkmark16x16.png') no-repeat center;  
+}
+
+
+.smtpTable.ui-datatable .ui-row-editor .ui-icon-close {
+    margin-left: 10px;
+    background: transparent url('../resources/images/delete.png') no-repeat center; 
+}*/
+
+
+
+
+.smtpTable.ui-datatable * {
+     border : 0px !important;   
+}
+
+
+.progresstbl.ui-datatable * {
+    border : 0px !important;   
+}
+
+
+.progresstbl.ui-datatable table thead th {
+    background-color: #FFFFFF !important;
+    background: #FFFFFF !important;
+    border: none;  
+    font-weight: normal; 
+} 
+ 
+
+
+.ui-datatable-odd {
+    background: none repeat scroll 0 0 #F2F5F9;
+}
+
+
+ 
+
+.smtpTable.ui-datatable table thead tr{
+    display: none !important; 
+} 
+
+ 
+ 
+
+.smtpTable.ui-datatable .ui-row-editing {
+    background: #E8EDAF !important;
+}
+
+ 
+
+
+/*************************** panel ***********************************/   
+
+.centerpanel .ui-widget-header {
+    background-color: #86AD16;
+    color: #FFFFFF;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold; 
+}
+
+
+
+.centerpanel .ui-widget-content { 
+    background-color: #F2F2F2; 
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    font-size: 12px;
+    font-weight: normal;
+    font-family:  Arial,sans-serif !important; 
+}
+
+.uploadsummaryimagepanel { 
+    font-size: 16px; 
+    font-weight: bold; 
+}
+
+
+.uploadsummaryheader {
+    background: url('../resources/images/SMTPtrap_colreduc_new.jpg') no-repeat center;
+    width: 700px;
+    height: 100px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.uploadsummary {  
+    width: 680px; 
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+.maintext {
+    font-size: 24px;
+    font-family: "Arial",sans-serif;
+    font-weight: bold;
+}
+
+/*.sectionstyle1 {
+    width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}*/
+
+.invalidentrymsg {
+    background: transparent; 
+    color: #FF0000; 
+    font-size: 12px; 
+    font-family: "Arial",sans-serif;
+}

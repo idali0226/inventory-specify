@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"    
+      xmlns:p="http://primefaces.org/ui"  >
+
+    <body>
+        <ui:composition  template="/templates/masterLayout.xhtml">      
+            <ui:define name="windowTitle">
+                Species List Page
+            </ui:define> 
+            <ui:define name="content"  >  
+                <h:form id="fileUploadForm" enctype="multipart/form-data"   prependId="false">
+                    <!--  File Upload section -->
+                    <h:panelGrid styleClass="excelfileuploadpanel" id="excelfileuploadpanel"  > 
+                         
+                        <h:panelGrid id="fileuploadsectionpanel">
+                            <p:messages autoUpdate="true" showDetail="true" showSummary="false" closable="true"   showIcon="true" />
+                            <h:panelGrid>
+                                <p:outputLabel value="Excel file upload" styleClass="labeltext" />
+                            </h:panelGrid> 
+                            <h:panelGrid>
+                                <p:outputLabel value="To upload file, please drag and drop file into file upload box, or select file from file system." styleClass="treetext" />
+                            </h:panelGrid>  
+                            <h:panelGrid styleClass="excelfileuplaodpanel" id="excelfileuplaodpanel">      
+                                <p:fileUpload fileUploadListener="#{fileUpload.handleFileUpload}" mode="advanced" id="excelupload"
+                                              dragDropSupport="true"  auto="true" sizeLimit="20000000" 
+                                              invalidSizeMessage="File is too big"
+                                              invalidFileMessage="Invalid file type.  Only .xlsx file is alloweded." styleClass="originalbutton"
+                                              update="excelfileuploadpanel"  allowTypes="/(\.|\/)(xls|xlsx)$/" />  
+                            </h:panelGrid> 
+                             
+                            <br /> 
+                            <h:panelGrid  id="uploadedFilePanel" cellpadding="0" cellspacing="0" 
+                                          style="margin-top: -20px; "  rendered="#{not empty fileUpload.fileName}">
+                                <p:panel style="border: none; font-size: 12px; " > 
+                                    <p:outputLabel value="#{fileUpload.fileName}" /> 
+                                    <p:spacer width="10" />
+                                    <p:commandLink actionListener="#{fileUpload.removefile()}"  process="@this" 
+                                                   title="#{msg.btnremovefile}"  update="fileuploadsectionpanel" global="false"  > 
+                                        <h:graphicImage name="images/button_remove.gif" styleClass="images" /> 
+                                    </p:commandLink> 
+                                </p:panel>    
+                            </h:panelGrid> 
+                            <br />  
+                             
+                        </h:panelGrid>
+
+                        <br />
+                        <h:panelGroup layout="block"  style="width: 150px; float: right;" id="exceluploadbuttonpanel" > 
+                            <p:commandButton value="#{msg.btnnext}" action="#{fileUpload.openObservationPage()}"  styleClass="defaultbutton" 
+                                             process="@this"  global="true"   disabled="#{!fileUpload.isFileUpload}" /> 
+                        </h:panelGroup> 
+                    </h:panelGrid>
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

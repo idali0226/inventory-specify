@@ -1,0 +1,200 @@
+<html xmlns="http://www.w3.org/1999/xhtml"   
+      xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html"   
+      xmlns:f="http://java.sun.com/jsf/core"  
+      xmlns:p="http://primefaces.org/ui"  >
+
+    <body>
+        <ui:composition  template="/templates/masterLayout.xhtml">      
+            <ui:define name="windowTitle">
+                Species List Page
+            </ui:define> 
+            <ui:define name="content"  >  
+                <h:form id="observationForm" prependId="false">
+                    <p:messages autoUpdate="true" showDetail="true" showSummary="false" closable="true"   showIcon="true" />
+                            
+                    <h:panelGroup layout="block" id="metadatapanel" styleClass="excelfileuploadpanel">  
+                        <br /> 
+                        <br />
+                        File uploaded:  #{fileUpload.fileName}
+                        <br /> 
+                        <br />
+
+                        <h:panelGroup id="agentListPanel" layout="block" styleClass="progressresultpanel">
+                            <p>Prepared by agent:</p>
+                            <h:selectOneMenu id="agentdropdown" value="#{fileUpload.selectedAgent}" style="width: 400px;  " > 
+                                <f:selectItem itemLabel="--------------- Select Agent -------------" itemValue="" noSelectionOption="true"  />
+                                <f:selectItems value="#{fileUpload.agents}" /> 
+                                <p:ajax  global="false" listener="#{fileUpload.handleAgentSelect}" process="@this"  />  
+                            </h:selectOneMenu> 
+                            <p>Prepared Date:</p>
+                            <p:calendar pattern="yyyy-MM-dd" showButtonPanel="true" navigator="true" maxdate="#{fileUpload.maxDate}"
+                                        id="customCal"  size="40" value="#{fileUpload.submittedDate}" styleClass="smalltext" >    
+                                <p:ajax event="dateSelect" listener="#{fileUpload.handleDateSelect}" global="false" />  
+                                <p:ajax event="change" update="agentListPanel" listener="#{fileUpload.dateBlur()}" global="false" />
+                            </p:calendar>  
+                        </h:panelGroup>
+
+
+                    </h:panelGroup>
+                    <br />
+                    <br />
+                    <hr />
+
+                    <br />
+
+                    <h:panelGroup layout="block" id="observationtogglepanel" styleClass="observationpanel" > 
+                        Read in observation: 
+                        <p:spacer width="10" height="2" /> 
+                        <p:commandLink actionListener="#{fileUpload.observationListAction}" update="observationtogglepanel taxonlisttogglepanel"  >
+                            <p:graphicImage value="/resources/images/downarrow.gif" styleClass="images" rendered="#{fileUpload.openObservation}"/> 
+                            <p:graphicImage value="/resources/images/hidearrow.gif" styleClass="images" rendered="#{!fileUpload.openObservation}" /> 
+                        </p:commandLink> 
+                        <p:spacer width="790" height="5" />
+
+                        <h:panelGroup layout="block" id="observationpanel"  rendered="#{fileUpload.openObservation}">
+
+                            <p:dataTable var="obsv" value="#{fileUpload.obsList}" 
+                                         paginator="true"  rows="10"  
+                                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                         rowsPerPageTemplate="5,10,15,20"
+                                         rowStyleClass="#{obsv.eventId == 0 || obsv.computedName == null ? 'errortext' : ''}" >
+ 
+                                <f:facet name="header"> 
+                                    Observation List
+                                </f:facet>
+
+                                <p:column headerText="Genus" style="font-size: 11px; width : 60px; " sortBy="#{obsv.genus}"  >
+                                    <h:outputText value="#{obsv.genus}" />
+                                </p:column>
+ 
+                                <p:column headerText="Species" style="font-size: 11px; width: 60px; " sortBy="#{obsv.species}" >
+                                    <h:outputText value="#{obsv.species}" />
+                                </p:column>
+                                
+                                <p:column headerText="Determined by" style="font-size: 11px; width: 35px; "  >
+                                    <h:outputText value="#{obsv.determiner}" />
+                                </p:column>
+
+                                <p:column headerText="Det. date" style="font-size: 11px; width: 35px; "  >
+                                    <h:outputText value="#{obsv.determinedDate}" />
+                                </p:column>
+
+                                <p:column headerText="Notes" style="font-size: 11px; width: 120px; "  >
+                                    <h:outputText value="#{obsv.remark}" />
+                                </p:column>
+ 
+                                <p:column headerText="# Males" style="font-size: 11px; width: 30px; "  >
+                                    <h:outputText value="#{obsv.numOfMales}" />
+                                </p:column>
+ 
+                                <p:column headerText="# Females" style="font-size: 11px; width: 30px; "  >
+                                    <h:outputText value="#{obsv.numOfFemales}" />
+                                </p:column>
+
+                                <p:column headerText="Total" style="font-size: 11px; width: 25px; "   > 
+                                    <h:outputText value="#{obsv.total}" /> 
+                                </p:column> 
+
+                                <p:column headerText="Event ID" style="font-size: 11px; width: 40px; " > 
+                                    <h:outputText value="#{obsv.eventId}" rendered="#{observation.eventId != 0}"/> 
+                                    <h:outputText value="Event is missing." rendered="#{observation.eventId == 0}" styleClass="errortext"/> 
+                                </p:column> 
+
+                                <p:column headerText="Storage" style="font-size: 11px; width: 40px; "  >  
+                                    <h:outputText value="#{obsv.storage}"  />
+                                </p:column>
+
+                                <p:column headerText="Media" style="font-size: 11px; width: 30px; "   >  
+                                    <h:outputText value="#{obsv.media}"  />
+                                </p:column>
+                            </p:dataTable> 
+                        </h:panelGroup>
+                    </h:panelGroup> 
+
+                    <br />
+
+                    <h:panelGroup layout="block" id="taxonlisttogglepanel"  > 
+                        <hr />
+                        <br />
+                        <h:panelGroup layout="block"  rendered="#{fileUpload.isObservationValid}" styleClass="observationpanel">
+                            
+                            Read in taxon list: 
+                            <p:spacer width="10" height="2" /> 
+                            <p:commandLink actionListener="#{fileUpload.taxonListAction}" update="taxonlisttogglepanel"  >
+                                <p:graphicImage value="/resources/images/downarrow.gif" styleClass="images" rendered="#{fileUpload.openTaxonList}"/> 
+                                <p:graphicImage value="/resources/images/hidearrow.gif" styleClass="images" rendered="#{!fileUpload.openTaxonList}" /> 
+                            </p:commandLink> 
+                            <p:spacer width="790" height="5" />
+
+                            <h:panelGroup layout="block" id="taxonlistPanel"  rendered="#{fileUpload.openTaxonList}">
+                               <p:dataTable var="taxa" value="#{fileUpload.taxonList}"  
+                                                 rows="10" paginator="true" 
+                                                 rowsPerPageTemplate="10,20,50"
+                                                 paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}" 
+                                                 styleClass="fixed-size" emptyMessage="No data" >
+                                        
+                                        <f:facet name="header"> 
+                                            #{msg.readintaxon}  
+                                        </f:facet>
+                                        
+                                        <p:columnGroup type="header">
+                                            <p:row>
+                                                <p:column colspan="7" headerText="Taxon from sheet" /> 
+                                            </p:row>
+                                            <p:row>
+                                                <p:column headerText="Genus"  />
+                                                <p:column headerText="Species"   />
+                                                <p:column headerText="Taxon [Computed]"   />
+                                                <p:column headerText="Author"/>
+                                                <p:column headerText="GUID"/>
+                                                <p:column headerText="Source" />
+                                                <p:column headerText="Notes" />  
+                                            </p:row>
+                                        </p:columnGroup>
+                                        
+                                        <p:column style="font-size: 11px; width: 160px; "  >
+                                            <h:outputText value="#{taxa.genus}" />
+                                        </p:column>
+                                   
+                                        <p:column style="font-size: 11px; width: 160px; "  >
+                                            <h:outputText value="#{taxa.species}" />
+                                        </p:column>
+
+                                        <p:column style="font-size: 11px; width: 160px; "  >
+                                            <h:outputText value="#{taxa.computedName}" />
+                                        </p:column>
+                                    
+                                        <p:column   style="font-size: 11px; width: 80px; "  >
+                                            <h:outputText value="#{taxa.author}" />
+                                        </p:column>
+                                   
+                                        <p:column style="font-size: 11px; width: 170px; "> 
+                                            <h:outputText value="#{taxa.guid}" />
+                                        </p:column>
+
+                                        <p:column  style="font-size: 11px; width: 80px; " >
+                                            <h:outputText value="#{taxa.source}" />
+                                        </p:column>
+                                        
+                                        <p:column  style="font-size: 11px; width: 140px; " >
+                                            <h:outputText value="#{taxa.notes}"/>
+                                        </p:column> 
+                                    </p:dataTable>
+                            </h:panelGroup>
+                        </h:panelGroup>
+
+                        <h:panelGroup layout="block"  style="width: 150px; float: right;" id="exceluploadbuttonpanel" > 
+                            <p:commandButton value="#{msg.btnnext}" action="#{fileUpload.uploadData()}" 
+                                             styleClass="defaultbutton" rendered="#{fileUpload.isTaxonListValid}"
+                                             process="@this"  global="true"   /> 
+                        </h:panelGroup> 
+                        <br/>
+                        <br/>
+                    </h:panelGroup>
+
+                </h:form>
+            </ui:define>
+        </ui:composition>
+    </body>
+</html>

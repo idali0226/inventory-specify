@@ -96,9 +96,22 @@ public class SmtpDaoImpl<T extends EntityBean> implements SMTPDao<T>, Serializab
         TypedQuery<Object[]> TypedQuery = entityManager.createQuery(jpql, Object[].class);
         return TypedQuery.getResultList();
     }
+ 
 
+    @Override
+    public String getLastCatalogunumber(String jpql) {
 
+//        logger.info("getLastRecord: {}", jpql);
+        TypedQuery<String> query = entityManager.createQuery(jpql, String.class);
+        query.setMaxResults(1);
 
+        try {
+            return query.getSingleResult();
+        } catch (javax.persistence.NoResultException | javax.persistence.NonUniqueResultException ex) {
+            logger.warn(ex.getMessage());
+            return null;                        // if no result, return null
+        } 
+    }
     
     
     @Override
