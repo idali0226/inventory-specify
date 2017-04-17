@@ -146,6 +146,16 @@ public class FileUploader implements Serializable {
         navigate.observationPage();
     }
     
+    private Map buildTaxonGuidMap() {
+        Map<String, String> map = new HashMap<>();
+        taxonList.stream()
+                .forEach(t -> {
+                    map.put(t.getComputedName(), t.getGuid());
+                });
+        return map;
+    }
+     
+    
     public void handleAgentSelect() {
         logger.info("handleAgentSelect : {}", selectedAgent);
     }
@@ -205,6 +215,12 @@ public class FileUploader implements Serializable {
     
     public void uploadData() {
         logger.info("uploadData");
+         
+        Map<String, String> map = buildTaxonGuidMap();
+        obsList.stream().forEach(o -> { 
+            String guid = map.get(o.getComputedName());
+            o.setGuid(guid);
+        });
         ExcelData data = new ExcelData(fileName, getSelectedAgentId(), Util.dateToString(submittedDate),  obsList);
         client.upload(data);
         navigate.uploadSummaryPage();

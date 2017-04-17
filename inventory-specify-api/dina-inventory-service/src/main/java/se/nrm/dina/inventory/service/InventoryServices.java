@@ -5,7 +5,7 @@
  */
 package se.nrm.dina.inventory.service;
 
-import java.io.Serializable; 
+import java.io.Serializable;  
 import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.ws.rs.Consumes; 
@@ -13,7 +13,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces; 
+import javax.ws.rs.Produces;  
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import org.slf4j.Logger;
@@ -44,42 +44,81 @@ public class InventoryServices implements Serializable {
     private ExcelLogic excelLogic;
 
 
-    @GET
-    @Produces("text/plain")
-    public Response doGet() {
-        logger.info("logic : {}", logic);
-        return Response.ok("Hello from WildFly Swarm!").build();
-    }
+//    @GET
+//    @Produces("text/plain")
+//    public Response doGet() {
+//        logger.info("logic : {}", logic);
+//        return Response.ok("Hello from WildFly Swarm!").build();
+//    }
 
     @GET
     @Path("/agents")
     @Produces({MediaType.APPLICATION_JSON})
     public Response getAgents() {
-        logger.info("getAgents : {}", logic);
+        logger.info("getAgents");
          
         return Response.ok(logic.getSmtpAgentList()).build();
     }
+ 
+    
+    
+    
+//    @GET
+//    @Path("/")
+//    public Response getChildren(@QueryParam("parent") String parent) {
+////        logger.info("getTaxonChildrenByName : {} -- {}", name, tree);
+//
+//        logic.getTaxonTree(parent);
+//
+//        StringBuilder jpqlSB = new StringBuilder();
+//        jpqlSB.append("SELECT new se.nrm.dina.data.jpa.vo.CommonVO(t.taxonID, t.fullName, t.guid) FROM ");
+//        jpqlSB.append(tree);
+//        jpqlSB.append(" AS t WHERE t.parent.fullName = '");
+//        jpqlSB.append(name);
+//        jpqlSB.append("' AND t.definition.");
+//        jpqlSB.append(tree.toLowerCase());
+//        jpqlSB.append("TreeDefId = ");
+//        jpqlSB.append(treedefid);
+//        jpqlSB.append(" AND t.isAccepted = true");
+//        jpqlSB.append(" ORDER BY t.fullName");
+//
+//        List<CommonVO> results = dao.getListByJPQL(jpqlSB.toString());
+//        List<CommonVO> commonVos = new ArrayList();
+//        
+//        
+//        
+//        results.stream().forEach(r -> {
+//            List<String> list = dao.getStringListByJPQL(SYN_SQL + r.getId()); 
+//            commonVos.add(new CommonVO(r.getName(), r.getGuid(), list));
+//        });
+//
+//        GenericEntity ge = new GenericEntity<List<CommonVO>>(commonVos) {
+//        };
+//
+//        Response.ResponseBuilder rb = Response.ok(ge);
+//        return rb.build();
+//    }
+    
+    
+    
+    
+    
+    
+    
+    
  
     
     @POST 
     @Path("/")  
     @Consumes("application/json")
     public Response uploadData(String json) { 
-        logger.info("upload : {}", json);
+        logger.info("upload " );
         logic.upload(json);
         return Response.ok().build();
     }
- 
     
     
-    
-    
-    
-    
-    
-    
-    
-    
+  
     @POST 
     @Path("{rank}")  
     public Response readExcel(@PathParam("rank") String rank) { 

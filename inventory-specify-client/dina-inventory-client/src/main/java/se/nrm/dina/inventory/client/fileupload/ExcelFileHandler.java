@@ -10,8 +10,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.Serializable; 
-import java.util.Date;
+import java.io.Serializable;  
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map; 
@@ -63,6 +62,10 @@ public class ExcelFileHandler implements Serializable {
     private String media; 
     private Map<String, Integer> obsvTitleMap; 
     
+    private Map<String, String> taxonGuidMap;
+    
+    
+    
     private String author;
     private String guid;
     private String source;
@@ -71,7 +74,7 @@ public class ExcelFileHandler implements Serializable {
      
     private Map<String, Integer> taxonListTitleMap;
     private List<String> usedTaxonList;
-
+     
 
     private String servername = null;
     private final static String LOCAL_HOST = "localhost";
@@ -170,8 +173,10 @@ public class ExcelFileHandler implements Serializable {
                                 (int) c.getNumericCellValue();
     }
     
-    public List<ObservationData> readInObservation(Sheet sheet, Map<Integer, Integer> map, Map<String, Integer> titleMap) {
-        this.obsvTitleMap = titleMap;  
+    public List<ObservationData> readInObservation(Sheet sheet, Map<Integer, Integer> map, Map<String, Integer> titleMap ) {
+        this.obsvTitleMap = titleMap;
+
+        logger.info("texon guid map : {}", taxonGuidMap );
 
         return IntStream.range(1, sheet.getLastRowNum() + 1)
                 .mapToObj(i -> sheet.getRow(i))
@@ -227,9 +232,21 @@ public class ExcelFileHandler implements Serializable {
         cell = row.getCell(obsvTitleMap.get("Notes")); 
         notes = cell == null ? "" : cell.getStringCellValue();
         
+        String fullName = genus + " " + species;
+        logger.info("full name : {}", fullName);
+         
         return new ObservationData(eventId, genus, species, determiner, determinedDate, 
                                    storage, media, notes, numOfMales, numOfFemales, total);
     }
+    
+//    private String getGuid(String fullName) {
+//        return taxaDataList.stream()
+//                .filter(t -> t.getComputedName().equals(fullName))
+//                .findFirst()
+//                .get()
+//                .getGuid(); 
+//    }
+//    
     
     private void getDeterminedDate(Cell cell) {
         if(cell.getCellType() == Cell.CELL_TYPE_STRING) {
@@ -238,7 +255,11 @@ public class ExcelFileHandler implements Serializable {
                 determinedDate = StringUtils.replace(determinedDate, "/", "-");
             } 
         } else if(cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
-            determinedDate = String.valueOf((int)cell.getNumericCellValue()).concat("-01-01");
+            String dateInt = String.valueOf((int)cell.getNumericCellValue());
+            if(dateInt.length() > 4) {
+                dateInt = dateInt.substring(0, 4);
+            }
+            determinedDate = dateInt.concat("-01-01");
         }
     }
     
@@ -250,6 +271,9 @@ public class ExcelFileHandler implements Serializable {
         logger.info("used taxon list : {}", usedTaxonList);
         
         int index = titleMap.get("Taxon name (computed)");
+        logger.info("comput name index : {}", index);
+        
+         
         try {
             return IntStream.range(1, sheet.getLastRowNum() + 1) 
                                     .mapToObj(i -> sheet.getRow(i))
@@ -265,7 +289,8 @@ public class ExcelFileHandler implements Serializable {
      
      
     private Predicate<Row> isNotEmpty() {
-        return r -> r.getCell(0) != null && !r.getCell(0).getStringCellValue().isEmpty();
+       
+        return r -> r != null && r.getCell(0) != null && !r.getCell(0).getStringCellValue().isEmpty();
     }
     
     
@@ -311,8 +336,8 @@ public class ExcelFileHandler implements Serializable {
      
 
 
-    private Predicate<Row> isInList(int index) {
-        return r -> r.getCell(index) != null && usedTaxonList.contains(r.getCell(index).getStringCellValue());
+    private Predicate<Row> isInList(int index) { 
+        return r ->  r.getCell(index) != null && usedTaxonList.contains(r.getCell(index).getStringCellValue());
     }
 
     
@@ -342,8 +367,11 @@ public class ExcelFileHandler implements Serializable {
         }
         notes = getCellStringValue(cell);
         
-        computedName = getComputedName(genus, species);
- 
+//        computedName = getComputedName(genus, species); 
+//        cell = row.getCell(taxonListTitleMap.get("Taxon name (computed)"));
+        
+        computedName = genus + " " + species;
+        
         return new TaxaData(0, genus, species, computedName, guid, author, notes, source, "", null);
     }
     

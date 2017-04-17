@@ -5,10 +5,11 @@
  */
 package se.nrm.dina.inventory.client.services;
   
+import java.util.ArrayList;
 import java.util.HashMap; 
 import java.util.LinkedHashMap;
-import java.util.Map; 
-import java.util.stream.Collector;
+import java.util.List;
+import java.util.Map;  
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.ejb.Stateless; 
@@ -23,6 +24,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
 import se.nrm.dina.inventory.client.vo.ExcelData; 
+import se.nrm.dina.inventory.client.vo.TreeTaxa;
 
 /**
  *
@@ -94,4 +96,41 @@ public class SmtpServiceClient {
         
         return responseString; 
     }  
+    
+    
+    public List<TreeTaxa> getChildren(String name) {
+//        logger.info("getChildren : {}", name);
+
+        List<TreeTaxa> children = new ArrayList();
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(BASE_SERVICE_URL); 
+        sb.append("search?parent=");
+        sb.append(name); 
+        try {
+            target = client.target(sb.toString());
+            Response response = target.request().get();
+
+            //Read output in string format
+            String json = response.readEntity(String.class);
+
+            String taxon;
+            List<String> syns;
+            JSONArray arr = new JSONArray(json);
+            for (int i = 0; i < arr.length(); i++) {
+                taxon = arr.getJSONObject(i).getString("name") + " [" + arr.getJSONObject(i).getString("guid") + "] ";
+                syns = new ArrayList();
+                JSONArray jsonArray = arr.getJSONObject(i).getJSONArray("list");
+                for (int j = 0; j < jsonArray.length(); j++) {
+                    syns.add(jsonArray.getString(j));
+                }   
+                children.add(new TreeTaxa(taxon, false, syns));
+            }
+            response.close();
+        } catch (JSONException ex) {
+            logger.error(ex.getMessage());
+        }
+        return children;
+    }
+ 
 }

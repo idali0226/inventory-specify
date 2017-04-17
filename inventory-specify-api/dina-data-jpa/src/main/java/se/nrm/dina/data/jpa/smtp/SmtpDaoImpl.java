@@ -65,29 +65,51 @@ public class SmtpDaoImpl<T extends EntityBean> implements SMTPDao<T>, Serializab
 
     @Override
     public void bacthCreate(List<T> entities) {
-          
-//        entityManager.getTransaction().begin();
+           
         entities.stream().forEach(e -> {
             entityManager.persist(e);
         }); 
         entityManager.flush();
-        entityManager.clear();  
-        
-//        entityManager.getTransaction().commit();
+        entityManager.clear();   
     }
+    
+     
+    @Override
+    public int getCountByJPQL(String jpql) {
+        logger.info("getEntityByJpql : {}", jpql);
+        Query query = entityManager.createQuery(jpql);
+        
+        T t;
+        try {
+            t = (T) query.getSingleResult();
+            return 1;
+        } catch (javax.persistence.NoResultException ex) {
+            logger.error("No result");
+            return 0;
+        } catch (javax.persistence.NonUniqueResultException ex) {
+            return 2;
+        }
+    }
+    
+    
+    
 
 
     @Override
     public T getEntityByJPQL(String jpql) {
         logger.info("getEntityByJpql : {}", jpql);
         Query query = entityManager.createQuery(jpql);
-
+        
+        T t;
         try {
-            return (T) query.getSingleResult();
+            t = (T) query.getSingleResult();
+            return t;
         } catch (javax.persistence.NoResultException ex) {
             logger.error("No result");
             return null;
-        } 
+        } catch (javax.persistence.NonUniqueResultException ex) {
+            return null;
+        }
     }
 
     @Override
@@ -96,6 +118,7 @@ public class SmtpDaoImpl<T extends EntityBean> implements SMTPDao<T>, Serializab
         TypedQuery<Object[]> TypedQuery = entityManager.createQuery(jpql, Object[].class);
         return TypedQuery.getResultList();
     }
+ 
  
 
     @Override
@@ -138,10 +161,7 @@ public class SmtpDaoImpl<T extends EntityBean> implements SMTPDao<T>, Serializab
         }
         return null;  
     }
-    
-    
-    
-    
+ 
     
     
  

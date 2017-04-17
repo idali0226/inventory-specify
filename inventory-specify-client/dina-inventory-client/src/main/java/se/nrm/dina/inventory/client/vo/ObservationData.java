@@ -5,9 +5,7 @@
  */
 
 package se.nrm.dina.inventory.client.vo;
- 
-import java.util.Date;
-
+  
 
 /**
  *
@@ -26,6 +24,7 @@ public class ObservationData {
     private final int numOfMales; 
     private final int numOfFemales;   
     private final int total; 
+    private String guid;
     
     public ObservationData(int eventId, String genus, String species, String determiner, String determinedDate, 
                             String storage, String media, String remark, int numOfMales, int numOfFemales, int total) {
@@ -39,7 +38,7 @@ public class ObservationData {
         this.remark = remark;
         this.numOfMales = numOfMales;
         this.numOfFemales = numOfFemales;  
-        this.total = total; 
+        this.total = total;  
     }
      
     public int getEventId() {
@@ -88,6 +87,14 @@ public class ObservationData {
 
     public String getDeterminedDate() {
         return determinedDate;
+    }
+
+    public String getGuid() {
+        return guid;
+    }
+
+    public void setGuid(String guid) {
+        this.guid = guid;
     }
 
   

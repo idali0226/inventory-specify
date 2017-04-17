@@ -22,6 +22,7 @@ import org.primefaces.model.TreeNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.dina.inventory.client.services.DinaServiceExcelFileUploadClient;
+import se.nrm.dina.inventory.client.services.SmtpServiceClient;
 import se.nrm.dina.inventory.client.vo.TreeTaxa;
 
 /**
@@ -36,13 +37,15 @@ public class TaxonTree implements Serializable {
      
     private TreeNode root;
     private TreeNode selectedNode;
-    private TreeNode familyNode;
-    private final String insecta = "Insecta"; 
+//    private TreeNode familyNode;
+    private TreeNode rootNode;
+//    private final String insecta = "Insecta"; 
+    private final String hexapoda = "Hexapoda";
     private boolean isHighClass = true;
     
     
     @Inject
-    private DinaServiceExcelFileUploadClient client;
+    private SmtpServiceClient client;
      
     @PostConstruct
     public void init() {
@@ -53,57 +56,58 @@ public class TaxonTree implements Serializable {
         return new DefaultTreeNode(new TreeTaxa(s.getTaxaName(), false, s.getSyns()), node);
     }
 
-    public void initTree(String family) {
+    public void initTree() {
+        logger.info("initTree");
         
-        logger.info("initTree : {}", family);
+        root = new DefaultTreeNode(new TreeTaxa("Root", false, null), null);  
+        rootNode = new DefaultTreeNode(new TreeTaxa(hexapoda, false, null), root);
+        List<TreeTaxa> children = client.getChildren(hexapoda); 
         
-        if(family.contains(":")) {
-            family = StringUtils.substringAfterLast(family, ":");
-        }
-         
-        int rank = client.isOrderAndUp(family, 11);
-          
-        
-        root = new DefaultTreeNode(new TreeTaxa("Root", false, null), null); 
-        List<TreeTaxa> children;
-        if(rank == 0) {
-           familyNode = new DefaultTreeNode(new TreeTaxa(insecta, false, null), root);
-           children = client.getChildren(insecta, "Taxon", 11); 
-        } else {
-            children = client.getChildren(family, "Taxon", 11);
-            familyNode = new DefaultTreeNode(new TreeTaxa(family, false, null), root);
-        }
-        
-         
-//        root = new DefaultTreeNode(new TreeTaxa("Root", false, null), null); 
-//        if(children.isEmpty()) {
-//            familyNode = new DefaultTreeNode(new TreeTaxa(insecta, false, null), root);
-//            children = client.getChildren(insecta, "Taxon", 11);
-//            isFamily = false;
-//        } else {
-//            familyNode = new DefaultTreeNode(new TreeTaxa(family, false, null), root);
-//        }
-          
         children.stream()
                 .forEach(s -> {
-                    familyNode.getChildren().add(buildTreeNode(s, familyNode));
+                    rootNode.getChildren().add(buildTreeNode(s, rootNode));
                 }); 
         
         
-        if(rank >= 110) {
-            isHighClass = false;
-            familyNode.setExpanded(true);
-            familyNode.getChildren().stream()
-                    .forEach(n -> {
-                        collapsingORexpanding(n, true);
-                    }); 
-        } 
+//        logger.info("initTree : {}", family);
+        
+//        if(family.contains(":")) {
+//            family = StringUtils.substringAfterLast(family, ":");
+//        }
+//         
+//        int rank = client.isOrderAndUp(family, 11);
+          
+        
+        
+//        if(rank == 0) {
+//           familyNode = new DefaultTreeNode(new TreeTaxa(insecta, false, null), root);
+//           children = client.getChildren(insecta, "Taxon", 11); 
+//        } else {
+//            children = client.getChildren(family, "Taxon", 11);
+//            familyNode = new DefaultTreeNode(new TreeTaxa(family, false, null), root);
+//        }
+ 
+          
+//        children.stream()
+//                .forEach(s -> {
+//                    familyNode.getChildren().add(buildTreeNode(s, familyNode));
+//                }); 
+//        
+//        
+//        if(rank >= 110) {
+//            isHighClass = false;
+//            familyNode.setExpanded(true);
+//            familyNode.getChildren().stream()
+//                    .forEach(n -> {
+//                        collapsingORexpanding(n, true);
+//                    }); 
+//        } 
     }
     
     private void collapsingORexpanding(TreeNode n, boolean option) {
         TreeTaxa treetaxa = (TreeTaxa) n.getData();
         String taxonName = StringUtils.substringBefore(treetaxa.getTaxaName(), " [");
-        List<TreeTaxa> children = client.getChildren(taxonName, "Taxon", 11);
+        List<TreeTaxa> children = client.getChildren(taxonName);
         if(children.isEmpty()) {
 //            n.setSelected(false);
         } else {
@@ -119,12 +123,12 @@ public class TaxonTree implements Serializable {
     
     public void expand() {
         logger.info("expand ");
-        collapseOrExpandTree(familyNode, true);
+        collapseOrExpandTree(rootNode, true);
     }
     
     public void collapse() {
         logger.info("collapse");
-        collapseOrExpandTree(familyNode, false);
+        collapseOrExpandTree(rootNode, false);
     }
     
     private void collapseOrExpandTree(TreeNode n, boolean option) {
@@ -136,24 +140,7 @@ public class TaxonTree implements Serializable {
             n.setExpanded(option); 
         }
     }
-    
-//    public void getChildren(NodeExpandEvent event) {
-//        logger.info("onNodeExpand : {}", event.getTreeNode().toString());
-//
-//        TreeNode node = event.getTreeNode();    
-//        List<TreeNode> nodes = node.getChildren();  
-//        
-//        nodes.stream()
-//                .forEach(n -> {
-//                    TreeTaxa treetaxa = (TreeTaxa) n.getData();
-//                    String taxonName = StringUtils.substringBefore(treetaxa.getTaxaName(), " [");
-//                    List<TreeTaxa> grandChildren = client.getChildren(taxonName, "Taxon", 11);
-//                    grandChildren.stream()
-//                           .forEach(s -> {
-//                                n.getChildren().add(buildTreeNode(s, n));
-//                            });
-//                }); 
-//    }
+ 
 
     public boolean isIsHighClass() {
         return isHighClass;
@@ -185,7 +172,7 @@ public class TaxonTree implements Serializable {
                 .forEach(n -> {
                     TreeTaxa treetaxa = (TreeTaxa) n.getData();
                     String taxonName = StringUtils.substringBefore(treetaxa.getTaxaName(), " [");
-                    List<TreeTaxa> grandChildren = client.getChildren(taxonName, "Taxon", 11);
+                    List<TreeTaxa> grandChildren = client.getChildren(taxonName);
                     grandChildren.stream()
                            .forEach(s -> {
                                 n.getChildren().add(buildTreeNode(s, n));

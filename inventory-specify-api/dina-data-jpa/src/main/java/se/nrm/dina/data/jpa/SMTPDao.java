@@ -27,6 +27,9 @@ public interface SMTPDao<T extends EntityBean> {
     public T getEntityByJPQL(String jpql);
     
     public List<Object[]> getSearchResultsByJPQL(String jpql);
+    
+    
+    public int getCountByJPQL(String jpql);
 
     /**
      *
@@ -38,10 +41,7 @@ public interface SMTPDao<T extends EntityBean> {
 
 
    
-    public String getLastCatalogunumber(String jpql);
-    
-    
-    
+    public String getLastCatalogunumber(String jpql); 
     
     public void deleteOldSMTPData();
 }

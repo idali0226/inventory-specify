@@ -8,6 +8,7 @@ package se.nrm.dina.datamodel.impl;
 import se.nrm.dina.datamodel.BaseEntity;
 import java.math.BigDecimal;
 import java.util.Date; 
+import java.util.List;
 import java.util.Set;
 import javax.persistence.Basic;
 import javax.persistence.CascadeType;
@@ -330,7 +331,7 @@ public class Collectionobject extends BaseEntity {
     private Set<Otheridentifier> otheridentifierList;
     
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "collectionObjectID", fetch = FetchType.LAZY)
-    private Set<Collectionobjectattr> collectionobjectattrList;
+    private List<Collectionobjectattr> collectionobjectattrList;
 
     public Collectionobject() {
     }
@@ -939,14 +940,15 @@ public class Collectionobject extends BaseEntity {
         this.otheridentifierList = otheridentifierList;
     }
 
-    @XmlTransient
-    public Set<Collectionobjectattr> getCollectionobjectattrList() {
+    public List<Collectionobjectattr> getCollectionobjectattrList() {
         return collectionobjectattrList;
     }
 
-    public void setCollectionobjectattrList(Set<Collectionobjectattr> collectionobjectattrList) {
+    public void setCollectionobjectattrList(List<Collectionobjectattr> collectionobjectattrList) {
         this.collectionobjectattrList = collectionobjectattrList;
     }
+
+ 
 
     @Override
     public int hashCode() {

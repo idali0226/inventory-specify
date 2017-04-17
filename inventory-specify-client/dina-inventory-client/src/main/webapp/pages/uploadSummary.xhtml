@@ -1,18 +1,74 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets" 
       xmlns:h="http://java.sun.com/jsf/html"  
+      xmlns:f="http://java.sun.com/jsf/core"  
       xmlns:p="http://primefaces.org/ui"  >
 
     <h:body>  
         <ui:composition template="./../templates/masterLayout.xhtml">
 
             <ui:define name="windowTitle">
-                Inventory Client Login
+                Inventory upload summary
             </ui:define> 
 
             <ui:define name="content">     
 
                 Data uploaded
+                <br />
+                <br />
+
+
+                <ui:remove>
+                    <h:panelGroup id="summaryPanel" layout="block" rendered="#{excel.openSummary}"> 
+                        <h:outputLabel value="Verify uploaded taxon list from taxon tree"   styleClass="defaultboldtext"/><br /><br />
+
+                        <p:commandButton value="Expand taxon tree" action="#{taxontree.expand()}" update="excelfilesummarypanel :inventoryform:imgswitchPanel" 
+                                         disabled="#{taxontree.isHighClass}" global="true" process="@this"  /> 
+                        <p:commandButton value="Collapse taxon tree" action="#{taxontree.collapse()}" update="excelfilesummarypanel :inventoryform:imgswitchPanel" 
+                                         disabled="#{taxontree.isHighClass}" global="true" process="@this" /> 
+
+
+                        <p:tree  value="#{taxontree.root}"  var="taxa" dynamic="true"  cache="true" style="width: 900px; font-size: 11px; ">
+                            <p:ajax event="expand"  listener="#{taxontree.onNodeExpand}" />
+                            <p:treeNode >
+                                <h:outputText value="#{taxa.taxaName}" styleClass="treetext" /><br/>
+
+                                <ui:repeat var="syn" value="#{taxa.syns}" varStatus="status"> 
+                                    <h:outputText value="#{syn}" styleClass="treesynomnytext" /> <br/>
+                                </ui:repeat>  
+                            </p:treeNode>
+                        </p:tree>  
+
+                        <br />
+                        <br />
+                        <h:outputLabel value="Verify uploaded observation data" styleClass="defaultboldtext" /><br />
+
+                        <p:tree  value="#{obstree.root}"  var="obs" dynamic="true"  cache="true" style="width: 900px; font-size: 11px; ">
+                            <p:ajax event="expand"  listener="#{obstree.onNodeExpand}" />
+                            <p:treeNode>
+                                <h:outputText value="#{obs.name}" styleClass="treetext" />
+                            </p:treeNode>
+                        </p:tree> 
+
+
+                        <br />
+                        <br />
+
+                        <h:outputText value="If there are errors in the uploaded data, and you wish to reload the excel file, click the 'Remove Uploaded Data' button to start over again. "  styleClass="redtext" />
+                        <br />
+                        <br />
+                        <p:commandButton value="Remove Uploaded Data" action="#{excel.deleteUploadedData}"  global="true" process="@this" 
+                                         update=":inventoryform:imgswitchPanel :inventoryform:mainpanel" >    
+                            <p:confirm header="Confirmation" message="   Do you reall want to delete the uploaded data?   " icon="ui-icon-alert" />
+                        </p:commandButton>
+
+
+                        <p:confirmDialog global="true" showEffect="fade" hideEffect="explode">
+                            <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+                            <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+                        </p:confirmDialog>
+                    </h:panelGroup>
+                </ui:remove>
             </ui:define>
         </ui:composition>
     </h:body>

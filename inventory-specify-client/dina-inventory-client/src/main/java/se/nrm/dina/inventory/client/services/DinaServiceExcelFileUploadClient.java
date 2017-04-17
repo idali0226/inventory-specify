@@ -287,22 +287,7 @@ public class DinaServiceExcelFileUploadClient {
         response.close();
         return map; 
     }
-    
-    
-
-//    public String getParentName(String name, int treeDefId) {
-//        StringBuilder sb = new StringBuilder();
-//        sb.append(BASE_URL);
-//        sb.append("taxa/");
-//        sb.append(name);
-//        sb.append("/");
-//        sb.append(treeDefId);
-//
-//        target = client.target(sb.toString());
-//        Response response = target.request().get();
-// 
-//        return response.readEntity(String.class); 
-//    }
+ 
     
     public Map<String, String> getDyntaxaByName(String name, int treeDefId) {
         StringBuilder sb = new StringBuilder();
