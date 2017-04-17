@@ -286,7 +286,7 @@ public class Collectionobject extends BaseEntity {
     private Agent createdByAgentID;
     
     @JoinColumn(name = "CollectionID", referencedColumnName = "UserGroupScopeId")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @NotNull(message = "collectionID can not be null")
     private Collection collectionID;
     

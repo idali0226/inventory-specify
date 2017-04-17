@@ -9,7 +9,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
+import java.util.UUID; 
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -105,6 +105,19 @@ public class Util {
         return AGENT_ID;
     }
     
+    public Date convertStringToDate(String strDate) {
+        
+        if(strDate == null) {
+            return null;
+        } else {
+            try {
+                return DATA_FORMAT.parse(strDate);
+            } catch (ParseException ex) {
+                return null;
+            }
+        } 
+    }
+        
     public Date convertStringToDate(int year) {
         try { 
             if(year != 0) {

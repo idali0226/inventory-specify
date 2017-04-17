@@ -8,6 +8,7 @@ package se.nrm.dina.datamodel.impl;
 import se.nrm.dina.datamodel.BaseEntity;
 import java.util.Date;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -77,7 +78,7 @@ public class Collectionobjectattr extends BaseEntity {
     private Agent createdByAgentID;
     
     @JoinColumn(name = "AttributeDefID", referencedColumnName = "AttributeDefID")
-    @ManyToOne(optional = false)
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     private Attributedef attributeDefID;
 
     public Collectionobjectattr() {

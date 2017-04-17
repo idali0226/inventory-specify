@@ -19,7 +19,7 @@ public class ObservationData {
     private final String genus; 
     private final String species;    
     private final String determiner;
-    private final int determinedDate;
+    private final String determinedDate;
     private final String storage; 
     private final String media;  
     private final String remark; 
@@ -27,7 +27,7 @@ public class ObservationData {
     private final int numOfFemales;   
     private final int total; 
     
-    public ObservationData(int eventId, String genus, String species, String determiner, int determinedDate, 
+    public ObservationData(int eventId, String genus, String species, String determiner, String determinedDate, 
                             String storage, String media, String remark, int numOfMales, int numOfFemales, int total) {
         this.eventId = eventId;  
         this.genus = genus;
@@ -86,7 +86,9 @@ public class ObservationData {
         return determiner;
     }
 
-    public int getDeterminedDate() {
+    public String getDeterminedDate() {
         return determinedDate;
-    } 
+    }
+
+  
 }

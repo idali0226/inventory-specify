@@ -22,10 +22,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;  
 import se.nrm.dina.data.jpa.SMTPDao;
 import se.nrm.dina.datamodel.impl.Agent;
+import se.nrm.dina.datamodel.impl.Attributedef;
 import se.nrm.dina.datamodel.impl.Collectingevent;
 import se.nrm.dina.datamodel.impl.Collection;
 import se.nrm.dina.datamodel.impl.Collectionobject;
+import se.nrm.dina.datamodel.impl.Collectionobjectattr;
 import se.nrm.dina.datamodel.impl.Determination;
+import se.nrm.dina.datamodel.impl.Discipline;
 import se.nrm.dina.datamodel.impl.Preparation;
 import se.nrm.dina.datamodel.impl.Preptype;
 import se.nrm.dina.datamodel.impl.Taxon;
@@ -48,13 +51,14 @@ public class InventoryLogic implements Serializable {
     private Timestamp timestamp;
     private Agent createdBy;
     private Taxon taxon;
-    private Agent determinedBy;
-    private Taxontreedef taxonTreeDef;
+    private Agent determinedBy; 
     private Preptype preptype;
     private Collectingevent event;
     private Collection collection;
-    List<Determination> determinations;
-    List<Preparation> prepartions;
+    private Discipline discipline; 
+    private List<Determination> determinations;
+    private List<Preparation> prepartions;
+    private List<Collectionobjectattr> coAttrs;
     
     @EJB
     private SMTPDao dao;
@@ -71,33 +75,31 @@ public class InventoryLogic implements Serializable {
     }
      
  
-    public String upload(String json) {
+    public void upload(String json) {
         logger.info("upload ");
 
         createdBy = (Agent) dao.findByReference(Util.getInstance().getAgentId(), Agent.class);
-        timestamp = new Timestamp(System.currentTimeMillis());
-        taxonTreeDef = (Taxontreedef) dao.findByReference(Util.getInstance().getTaxonTreeDefId(), Taxontreedef.class);
+        timestamp = new Timestamp(System.currentTimeMillis()); 
         collection = (Collection) dao.findByReference(Util.getInstance().getCollectionId(), Collection.class);
+        discipline = (Discipline) dao.findByReference(Util.getInstance().getDisciplineId(), Discipline.class);
          
         int lastCatalogNumber = buildNextCatalognumberByCollection();
 
+        List<Collectionobject> collectionList = new ArrayList<>();
         try {
             JSONObject jsonObj = new JSONObject(json);
             String fileName = jsonObj.getString("excelfilename");
             int preparedById = jsonObj.getInt("preparaedById");
             String preparedByDate = jsonObj.getString("preparedDate");
-            
-            logger.info("prepared data : {} --- {}", preparedById, preparedByDate);
-
+              
             Map<String, Taxon> taxonMap = new HashMap<>();
             Map<String, Agent> determinerMap = new HashMap<>();
             Map<Integer, Collectingevent> cenMap = new HashMap<>(); 
             Map<String, Preptype> preptypeMep = new HashMap<>();
-            
-            
-            
+              
             Accumulator accumulator = new Accumulator();
             accumulator.setTotal(lastCatalogNumber);
+            
             
             JSONArray coArray = jsonObj.getJSONArray("coDataList"); 
             IntStream.range(0, coArray.length())  
@@ -108,6 +110,7 @@ public class InventoryLogic implements Serializable {
                         try {
                             accumulator.increment();
                             String catalognumber = String.format("%08d", accumulator.total);
+                            logger.info("catalogNumber : {}", catalognumber);
                              
                             JSONObject coObject = coArray.getJSONObject(i);
                             int eventId = coObject.getInt("eventId");  
@@ -126,7 +129,7 @@ public class InventoryLogic implements Serializable {
                                 determinerMap.put(determinedByName, determinedBy);
                             }
                             
-                            int determinedDate = coObject.getInt("determinedDate");
+                            String determinedDate = coObject.getString("determinedDate");
                             String fullName = coObject.getString("computedName");
                             if(taxonMap.containsKey(fullName)) {
                                taxon = taxonMap.get(fullName); 
@@ -152,35 +155,94 @@ public class InventoryLogic implements Serializable {
                             int numOfMales = coObject.getInt("numOfMales");
                             int numOfFeaales = coObject.getInt("numOfFemales");
                             int total = coObject.getInt("total"); 
-                            int numOfUnknown = getNumOfUnknown(total, numOfMales, numOfFeaales);
-                            
+                             
                             String storage = coObject.getString("storage"); 
                             String remark =  coObject.getString("remark");
                             
                             Collectionobject co = new Collectionobject();
                             co.setCreatedByAgentID(createdBy);
+                            
+                            
                             co.setCatalogNumber(catalognumber);
-                            co.setTimestampCreated(timestamp);
-                            co.setCatalogNumber(fullName);
+                            co.setTimestampCreated(timestamp); 
+                            co.setRemarks(remark); 
+                            co.setCatalogedDate(timestamp);
+                            co.setCatalogedDatePrecision(Short.valueOf("1"));
+                            co.setCollectingEventID(event);
+                            co.setCatalogerID(createdBy);
+                            co.setCollectionMemberID(Util.getInstance().getCollectionId());
+                            co.setCollectionID(collection);
+                            co.setReservedText3(fileName);
+                            
+                            addNewCollectionObjectAttrs(co, total, numOfMales, numOfFeaales);
+                            
+                            co.setGuid(Util.getInstance().generateGUID().toString());
  
-                            determinations.add(buildDetermination(determinedDate));
-                            prepartions.add(buildPreparation(total, storage));
+                            determinations.add(buildDetermination(determinedDate, co));
+                            prepartions.add(buildPreparation(total, storage, co));
                             
-                            
-
+                            co.setCollectionobjectattrList(new HashSet(coAttrs));  
                             co.setDeterminationList(new HashSet(determinations));
+                            co.setPreparationList(new HashSet<>(prepartions));
+                            
+                            collectionList.add(co);
 
-
-                        } catch (JSONException ex) {
-                            logger.error(ex.getMessage());
-                        } catch (Exception ex) {
+                        } catch (JSONException | NumberFormatException ex) {
                             logger.error(ex.getMessage());
                         }
                     }); 
             
         } catch (JSONException ex) { 
         }
-        return null;
+        
+        dao.bacthCreate(collectionList); 
+    }
+    
+    private Attributedef createNewAttributedef() {
+        Attributedef attributDef = new Attributedef();
+        attributDef.setCreatedByAgentID(createdBy);
+        attributDef.setDisciplineID(discipline);
+        attributDef.setTimestampCreated(timestamp);   
+        attributDef.setPrepTypeID(preptype);
+        return attributDef;
+    }
+    
+    private void addNewCollectionObjectAttrs(Collectionobject co, int total, int numOfMales, int numOfFemales) {
+         
+        coAttrs = new ArrayList();
+        int numOfUnknown = getNumOfUnknown(total, numOfMales, numOfFemales);
+        
+        if(numOfFemales != 0) {
+            Collectionobjectattr coAttr = addCollectionObjectAtt("Female", numOfFemales);
+            coAttr.setCollectionObjectID(co); 
+            coAttrs.add(coAttr);
+        }
+        
+        if(numOfMales != 0) {
+            Collectionobjectattr coAttr = addCollectionObjectAtt("Male", numOfMales);
+            coAttr.setCollectionObjectID(co);
+            coAttrs.add(coAttr);
+        }
+        
+        if(numOfUnknown != 0) {
+            Collectionobjectattr coAttr = addCollectionObjectAtt("Unknown", numOfUnknown);
+            coAttr.setCollectionObjectID(co);
+            coAttrs.add(coAttr);
+        } 
+    }
+    
+    private Collectionobjectattr addCollectionObjectAtt(String sex, int numOfSpecimens) {
+        
+        Attributedef attrDef = createNewAttributedef();
+        Collectionobjectattr coAttr = new Collectionobjectattr(); 
+        coAttr.setCreatedByAgentID(createdBy);
+        coAttr.setTimestampCreated(timestamp); 
+        coAttr.setCollectionMemberID(Util.getInstance().getCollectionId()); 
+        coAttr.setAttributeDefID(attrDef);  
+        coAttr.setStrValue(sex);
+        coAttr.setDoubleValue((double) numOfSpecimens);
+    
+        return coAttr;
     }
     
     private int buildNextCatalognumberByCollection() {
@@ -188,10 +250,12 @@ public class InventoryLogic implements Serializable {
         String lastCatalogNumber = dao.getLastCatalogunumber(
                                         QueryStringBuilder.getInstance()
                                                 .buildGetLastCatalogNumber(Util.getInstance().getCollectionId()));
+        
+        logger.info("Last catalogNumber : {}", lastCatalogNumber);
         return lastCatalogNumber == null ? 0 : Integer.parseInt(lastCatalogNumber);
     }
     
-    private Determination buildDetermination(int determinedDate) {
+    private Determination buildDetermination(String determinedDate, Collectionobject co) {
         Determination determination = new Determination();
         determination.setCreatedByAgentID(createdBy);
         determination.setTimestampCreated(timestamp);
@@ -202,12 +266,13 @@ public class InventoryLogic implements Serializable {
         determination.setTaxonID(taxon);
         determination.setPreferredTaxonID(taxon);
         determination.setDeterminerID(determinedBy);
+        determination.setCollectionObjectID(co);
         return determination;
     }
     
  
     
-    private Preparation buildPreparation(int total, String storage) {
+    private Preparation buildPreparation(int total, String storage, Collectionobject co) {
         Preparation preparation = new Preparation();
         preparation.setCreatedByAgentID(createdBy);
         preparation.setTimestampCreated(timestamp);
@@ -217,6 +282,7 @@ public class InventoryLogic implements Serializable {
         preparation.setPrepTypeID(preptype);
         preparation.setPreparedByID(createdBy);
         preparation.setPreparedDatePrecision((short) 1);
+        preparation.setCollectionObjectID(co);
         preparation.setStorageLocation(storage); 
    
         return preparation;
@@ -258,6 +324,11 @@ public class InventoryLogic implements Serializable {
             firstName = "Mattias";
             lastName = "Forshage";
         }
+        
+        if(agentName.equals("Mårtem Eriksson")) {
+            firstName = "Mårten";
+            lastName = "Eriksson";
+        }
          
         Map<String, String> map = new HashMap();
         map.put("firstName", firstName);
@@ -265,6 +336,7 @@ public class InventoryLogic implements Serializable {
 
         return (Agent) dao.getEntityByNamedQuery(NAMED_QUERY_GET_AGENT_BY_NAME, map);
     }
+ 
     
     private String getLastName(String name) {
         if (name.contains(" ")) {

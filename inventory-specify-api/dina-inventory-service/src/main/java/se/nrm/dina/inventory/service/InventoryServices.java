@@ -20,8 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import se.nrm.dina.dina.inventory.logic.InventoryLogic;
 import se.nrm.dina.dina.inventory.logic.dyntaxa.DyntaxaDumpLogic;
-import se.nrm.dina.dina.inventory.logic.dyntaxa.ExcelLogic;
-//import se.nrm.dina.dyntaxa.dump.logic.ExcelReader;
+import se.nrm.dina.dina.inventory.logic.dyntaxa.ExcelLogic; 
 
 /**
  *

@@ -21,6 +21,7 @@ import java.util.stream.IntStream;
 import javax.ejb.Stateless;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest; 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.record.RecordFormatException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
@@ -53,7 +54,7 @@ public class ExcelFileHandler implements Serializable {
     private String genus;
     private String species; 
     private String determiner;
-    private int determinedDate;
+    private String determinedDate;
     private int numOfMales;
     private int eventId;
     private int numOfFemales;
@@ -195,12 +196,8 @@ public class ExcelFileHandler implements Serializable {
     
 
         cell = row.getCell(obsvTitleMap.get("Det. date"));
-        determinedDate = getCellIntValue(cell);
-//        if(cell.getCellType() == Cell.CELL_TYPE_STRING) {
-//            determinedDate = cell.getStringCellValue();
-//        }
-        
-     
+        getDeterminedDate(cell); 
+         
         cell = row.getCell(obsvTitleMap.get("EventID"));
         eventId = getCellIntValue(cell);
           
@@ -232,6 +229,17 @@ public class ExcelFileHandler implements Serializable {
         
         return new ObservationData(eventId, genus, species, determiner, determinedDate, 
                                    storage, media, notes, numOfMales, numOfFemales, total);
+    }
+    
+    private void getDeterminedDate(Cell cell) {
+        if(cell.getCellType() == Cell.CELL_TYPE_STRING) {
+            determinedDate = cell.getStringCellValue();
+            if(determinedDate.contains("/")) {
+                determinedDate = StringUtils.replace(determinedDate, "/", "-");
+            } 
+        } else if(cell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
+            determinedDate = String.valueOf((int)cell.getNumericCellValue()).concat("-01-01");
+        }
     }
     
     
