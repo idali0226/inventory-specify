@@ -17,12 +17,14 @@ public class ExcelData {
     private final String excelfilename;     
     private final int preparaedById;
     private final String preparedDate;
+    private final String loanNumber;
     private final List<ObservationData> coDataList;
     
-    public ExcelData(String excelfilename, int preparedById, String preparedDate, List<ObservationData> coDataList) { 
+    public ExcelData(String excelfilename, int preparedById, String preparedDate, String loanNumber, List<ObservationData> coDataList) { 
         this.excelfilename = excelfilename; 
         this.preparaedById = preparedById;
         this.preparedDate = preparedDate;
+        this.loanNumber = loanNumber;
         this.coDataList = coDataList;
     }
 
@@ -40,5 +42,9 @@ public class ExcelData {
  
     public List<ObservationData> getCoDataList() {
         return coDataList;
+    } 
+
+    public String getLoanNumber() {
+        return loanNumber;
     } 
 }

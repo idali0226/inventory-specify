@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.HashMap; 
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;  
+import java.util.Map;   
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import javax.ejb.Stateless; 
 import javax.ws.rs.client.Entity; 
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response; 
+import javax.ws.rs.core.Response;  
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException; 
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
@@ -24,7 +24,8 @@ import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory; 
 import se.nrm.dina.inventory.client.vo.ExcelData; 
-import se.nrm.dina.inventory.client.vo.TreeTaxa;
+import se.nrm.dina.inventory.client.vo.TaxonVO;
+import se.nrm.dina.inventory.client.vo.TreeTaxa; 
 
 /**
  *
@@ -46,6 +47,38 @@ public class SmtpServiceClient {
         if (client == null) {
             client = clientBuilder.build();
         }  
+    }
+    
+    public Map<String, Integer> validateUsedTaxon(TaxonVO taxonVo) {
+        logger.info("validateUsedTaxon"); 
+        Map<String, Integer> map = new HashMap();
+        try { 
+            StringBuilder sb = new StringBuilder();
+            sb.append(BASE_SERVICE_URL);  
+            
+            target = client.target(sb.toString());  
+            Response response = target.request(MediaType.APPLICATION_JSON).put(Entity.json(taxonVo));
+             
+            JSONArray array = new JSONArray(response.readEntity(String.class)); 
+            IntStream.range(0, array.length())
+                    .forEach(i -> {
+                        try {
+                            String scientificName = array.getJSONObject(i).getString("taxonName"); 
+                            if(scientificName.contains("Kleidotoma nr striata")) { 
+                                scientificName = "Kleidotoma nr striata/dolichocera"; 
+                            } 
+                            map.put(scientificName, array.getJSONObject(i).getInt("taxonID")); 
+                        } catch (JSONException ex) {
+                            logger.error(ex.getMessage());
+                        }
+                    }); 
+            response.close();
+        } catch (JSONException ex) {
+            logger.error(ex.getMessage());
+        }  
+        return map.entrySet().stream()
+                             .sorted((e1,e2) -> e1.getKey().compareTo(e2.getKey()))
+                             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1,e2) -> e1, LinkedHashMap::new)); 
     }
     
     

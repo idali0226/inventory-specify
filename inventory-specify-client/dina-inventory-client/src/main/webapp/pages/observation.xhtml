@@ -17,6 +17,8 @@
                         <br /> 
                         <br />
                         File uploaded:  #{fileUpload.fileName}
+                        <br />
+                        Loan number: #{fileUpload.loanNumber}
                         <br /> 
                         <br />
 
@@ -140,7 +142,7 @@
                                         
                                         <p:columnGroup type="header">
                                             <p:row>
-                                                <p:column colspan="7" headerText="Taxon from sheet" /> 
+                                                <p:column colspan="8" headerText="Taxon from sheet" /> 
                                             </p:row>
                                             <p:row>
                                                 <p:column headerText="Genus"  />
@@ -150,6 +152,7 @@
                                                 <p:column headerText="GUID"/>
                                                 <p:column headerText="Source" />
                                                 <p:column headerText="Notes" />  
+                                                <p:column headerText="Taxon Id"  />
                                             </p:row>
                                         </p:columnGroup>
                                         
@@ -179,6 +182,10 @@
                                         
                                         <p:column  style="font-size: 11px; width: 140px; " >
                                             <h:outputText value="#{taxa.notes}"/>
+                                        </p:column> 
+                                   
+                                        <p:column  style="font-size: 11px; width: 140px; " >
+                                            <h:outputText value="#{taxa.taxaId}"/>
                                         </p:column> 
                                     </p:dataTable>
                             </h:panelGroup>

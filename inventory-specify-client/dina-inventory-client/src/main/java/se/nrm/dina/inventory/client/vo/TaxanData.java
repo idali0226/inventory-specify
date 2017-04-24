@@ -10,7 +10,7 @@ package se.nrm.dina.inventory.client.vo;
  *
  * @author idali
  */ 
-public final class TaxaData {
+public final class TaxanData {
      
     private final int taxaId; 
     private final String genus;
@@ -19,14 +19,11 @@ public final class TaxaData {
     private final String guid; 
     private final String author; 
     private final String notes; 
-    private final String source;   
-    private final String url;
-    private final String type;
+    private final String source;    
     
     
-    public TaxaData(int taxaId, String genus, String species, String computedName, 
-                        String guid, String author, String notes,  String source, 
-                        String url, String type) {
+    public TaxanData(int taxaId, String genus, String species, String computedName, 
+                        String guid, String author, String notes,  String source) {
         this.taxaId = taxaId;
         this.genus = genus;
         this.species = species;
@@ -34,9 +31,7 @@ public final class TaxaData {
         this.guid = guid;
         this.author = author;
         this.notes = notes;
-        this.source = source;
-        this.url = url;
-        this.type = type;
+        this.source = source; 
     }
 
     public int getTaxaId() {
@@ -69,13 +64,5 @@ public final class TaxaData {
 
     public String getSource() {
         return source;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public String getType() {
-        return type;
     } 
 }

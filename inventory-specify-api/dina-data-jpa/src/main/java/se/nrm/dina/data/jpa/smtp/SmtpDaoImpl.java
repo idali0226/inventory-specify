@@ -76,7 +76,7 @@ public class SmtpDaoImpl<T extends EntityBean> implements SMTPDao<T>, Serializab
      
     @Override
     public int getCountByJPQL(String jpql) {
-        logger.info("getEntityByJpql : {}", jpql);
+        logger.info("getCountByJPQL : {}", jpql);
         Query query = entityManager.createQuery(jpql);
         
         T t;
@@ -92,6 +92,18 @@ public class SmtpDaoImpl<T extends EntityBean> implements SMTPDao<T>, Serializab
     }
     
     
+    @Override
+    public List<T> getEntitiesByJPQL(String jpql) {
+        logger.info("getEntityByJpql : {}", jpql);
+        Query query = entityManager.createQuery(jpql);
+         
+        try {
+            return query.getResultList();
+        } catch (javax.persistence.NoResultException ex) {
+            logger.error("No result");
+            return null;
+        } 
+    }
     
 
 

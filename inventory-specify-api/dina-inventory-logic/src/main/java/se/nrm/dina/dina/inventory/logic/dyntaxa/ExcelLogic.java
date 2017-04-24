@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.stream.IntStream;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -191,7 +192,7 @@ public class ExcelLogic implements Serializable {
          
         Taxon synomyOfTaxon = (Taxon) smtpDao.getEntityByJPQL( 
                                     QueryStringBuilder.getInstance()
-                                            .buildGetTaxon(synonymOf, TAXON_TREE_DEF_ID));
+                                            .buildGetTaxon(synonymOf));
        
         if(synomyOfTaxon != null) {
             Taxon theTaxon = new Taxon();
@@ -209,7 +210,9 @@ public class ExcelLogic implements Serializable {
             theTaxon.setAcceptedID(synomyOfTaxon);
             theTaxon.setTaxonTreeDefID(taxonTreeDef);
             theTaxon.setRemarks(comment);
+            theTaxon.setYesNo1(false);
             theTaxon = (Taxon) smtpDao.create(theTaxon);
+     
             logger.info("the saved taxon : {}", theTaxon);
         } else {
             logger.error("synonymOfTaxon not fild: {}", synonymOf);
@@ -227,13 +230,12 @@ public class ExcelLogic implements Serializable {
                         genus = row.getCell(0).getStringCellValue();
                         species = row.getCell(1).getStringCellValue();
                         author = row.getCell(2).getStringCellValue();
-                        scientificName = row.getCell(5).getStringCellValue();
-                        
+                        scientificName = row.getCell(5).getStringCellValue(); 
                         synonymOf = row.getCell(6).getStringCellValue();
                         
                         source = row.getCell(7).getStringCellValue(); 
                         if(source.length() > 64) {
-                            source = "";
+                            source = StringUtils.substring(source, 0, 64);
                         }
                         agentName = row.getCell(8).getStringCellValue(); 
                         if(row.getCell(10) != null) {

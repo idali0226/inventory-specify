@@ -26,6 +26,8 @@ public interface SMTPDao<T extends EntityBean> {
     
     public T getEntityByJPQL(String jpql);
     
+    public List<T> getEntitiesByJPQL(String jpql);
+    
     public List<Object[]> getSearchResultsByJPQL(String jpql);
     
     

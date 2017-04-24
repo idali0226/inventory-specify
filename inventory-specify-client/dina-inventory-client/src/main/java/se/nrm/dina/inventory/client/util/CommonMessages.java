@@ -17,18 +17,10 @@ public class CommonMessages {
     public final String AUTHENTICATION_FAILED = "You are not authorized to access this client.  Authentication failed!";
     public final String RE_LOGIN_EXISTS_USER = "Attempt to re-login while the user identity already exists";
     public final String INCORRECT_USERNAME_OR_PASSWORD = "Incorrect Username or Password!";
-    public final String LOGOUT_FAILED = "Failed to logout user!";
-//    public final String USER_NOT_IN_DB = "Username is not in database";
+    public final String LOGOUT_FAILED = "Failed to logout user!"; 
+     
     
-    
-    
-    
-    // Admin
-//    public final String DUPLICATE_USER = "Duplicate username";
-    
-    
-    // Metadata page
-    public final String INVALID_METADATA_MISSING_TAXON = "Invalid excel file: metadata sheet: Missing taxon";
+    // Metadata page 
     public final String INVALID_METADATA_MISSING_LOAN_NUMBER = "Invalid excel file: metadata sheet: Missing loan number";
     public final String INVALID_METADATA_MISSING_DYNTAXA_DUMP_DATE = "Invalid excel file: metadata sheet: Missing dyntaxa dump date";
     public final String INVALID_METADATA_MISSING_DETERMINAER = "Invalid excel file: metadata sheet: Missing determiner";

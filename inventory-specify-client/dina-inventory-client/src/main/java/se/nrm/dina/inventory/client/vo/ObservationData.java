@@ -17,22 +17,27 @@ public class ObservationData {
     private final String genus; 
     private final String species;    
     private final String determiner;
+    private final String firstName;
+    private final String lastName;
     private final String determinedDate;
     private final String storage; 
     private final String media;  
     private final String remark; 
     private final int numOfMales; 
     private final int numOfFemales;   
-    private final int total; 
-    private String guid;
+    private final int total;  
+    private int taxonId;
     
-    public ObservationData(int eventId, String genus, String species, String determiner, String determinedDate, 
-                            String storage, String media, String remark, int numOfMales, int numOfFemales, int total) {
+    public ObservationData(int eventId, String genus, String species, String determiner, String firstName, 
+                            String lastName, String determinedDate, String storage, String media, 
+                            String remark, int numOfMales, int numOfFemales, int total) {
         this.eventId = eventId;  
         this.genus = genus;
         this.species = species;  
         this.determinedDate = determinedDate;
         this.determiner = determiner;
+        this.firstName = firstName;
+        this.lastName = lastName;
         this.storage = storage;
         this.media = media; 
         this.remark = remark;
@@ -53,7 +58,7 @@ public class ObservationData {
         return species;
     }
 
-    public String getComputedName() {
+    public String getComputedName() { 
         return genus + " " + species;
     }
  
@@ -85,17 +90,23 @@ public class ObservationData {
         return determiner;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+     
     public String getDeterminedDate() {
         return determinedDate;
+    } 
+
+    public int getTaxonId() {
+        return taxonId;
     }
 
-    public String getGuid() {
-        return guid;
-    }
-
-    public void setGuid(String guid) {
-        this.guid = guid;
-    }
-
-  
+    public void setTaxonId(int taxonId) {
+        this.taxonId = taxonId;
+    } 
 }

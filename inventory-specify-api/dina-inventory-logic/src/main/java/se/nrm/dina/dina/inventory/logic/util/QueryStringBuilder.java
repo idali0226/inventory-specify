@@ -27,7 +27,7 @@ public class QueryStringBuilder {
         return instance;
     }
     
-    
+ 
     
     public String buildGetCollectingEventByEventIdAndDisciplineId(int eventId, int disciplineId) {
         
