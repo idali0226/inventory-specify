@@ -218,6 +218,23 @@ public class FileUploader implements Serializable {
                 .forEach(o -> {  
                     int taxonId = usedTaxonMap.get(o.getComputedName());
                     o.setTaxonId(taxonId);
+                    if(o.getComputedName().trim().equals("Thecophora sp 1")) {
+                        o.setDeterminationRemarks("sp 1");
+                    } else if(o.getComputedName().trim().equals("Omphale sp in aetius-group")) {
+                        o.setDeterminationRemarks("sp in aetius-group");
+                    } else if(o.getComputedName().trim().equals("Formica sp 1")) {
+                        o.setDeterminationRemarks("sp 1");
+                    } else if(o.getComputedName().trim().equals("Helina sp 1")) {
+                        o.setDeterminationRemarks("sp 1");
+                    } else if(o.getComputedName().trim().equals("Helina sp 2")) {
+                        o.setDeterminationRemarks("sp 2");
+                    } else if(o.getComputedName().trim().equals("Phaonia sp 1")) {
+                        o.setDeterminationRemarks("sp 1");
+                    } else if(o.getComputedName().trim().equals("Halictophagus sp 1")) {
+                        o.setDeterminationRemarks("sp 1");
+                    } else if(o.getComputedName().trim().equals("Allantus sp 1")) {
+                        o.setDeterminationRemarks("sp 1");
+                    }
                 });
     }
      
@@ -321,8 +338,13 @@ public class FileUploader implements Serializable {
         notes = cell == null ? "" : cell.getStringCellValue().trim();
          
         cell = row.getCell(taxonTitleMap.get("Taxon name (computed)"));
-        computedName = cell.getStringCellValue(); 
-        return new TaxanData(usedTaxonMap.get(computedName), genus, species, computedName, guid, author, notes, source);
+        computedName = cell.getStringCellValue().trim(); 
+        
+        String remarks = "";
+        if(computedName.equals("Thecophora sp 1")) {
+            remarks = "sp 1";
+        }
+        return new TaxanData(usedTaxonMap.get(computedName), genus, species, computedName, guid, author, notes, source, remarks);
     }
     
     private Predicate<Row> isInList(int index) {     
@@ -343,6 +365,10 @@ public class FileUploader implements Serializable {
   
     private List<ObservationData> readInObservation() { 
         Sheet sheet = workbook.getSheetAt(1);
+        
+        media = "";
+        storage = "";      
+        
         return IntStream.range(1, sheet.getLastRowNum() + 1)
                 .mapToObj(i -> sheet.getRow(i))
                 .filter(isNotEmpty())
@@ -393,7 +419,7 @@ public class FileUploader implements Serializable {
         getStorage(cell, row);
         
         cell = row.getCell(obsTitleMap.get("Media")); 
-        media = cell == null ? "" : cell.getStringCellValue();
+        media = cell == null ? media : cell.getStringCellValue();
         
         if(obsTitleMap.containsKey("Notes")) {
             cell = row.getCell(obsTitleMap.get("Notes")); 
@@ -417,7 +443,7 @@ public class FileUploader implements Serializable {
         } else {
             cell = null;
         }
-        storage = cell == null ? "" : cell.getStringCellValue(); 
+        storage = cell == null ? storage : cell.getStringCellValue(); 
         if(storage.endsWith(", Bengt Andersson")) {
             storage = StringUtils.substringBefore(storage, ", Bengt Andersson");
         }
@@ -548,6 +574,10 @@ public class FileUploader implements Serializable {
                 firstName = "Mattias";
                 lastName = "Forshage";
                 break;
+            case "Bo W Svensson":
+                firstName = "Bo";
+                lastName = "Svensson";
+                break;              
             case "Mårtem Eriksson":
                 firstName = "Mårten";
                 lastName = "Eriksson";
@@ -572,11 +602,18 @@ public class FileUploader implements Serializable {
                 firstName = "Jostein";
                 lastName = "Kjærandsen";
                 break;
-            case "SO Uiefors":
+            case "SO Uiefors": 
+                firstName = "Sven-Olof";
+                lastName = "Ulefors";
+                break;
+            case "SO Ulefors": 
                 firstName = "Sven-Olof";
                 lastName = "Ulefors";
                 break;
             case "S. Martinsson":
+                firstName = "Svante";
+                lastName = "Martinsson";
+                break; 
             case "Svante Matinsson":
                 firstName = "Svante";
                 lastName = "Martinsson";
@@ -595,7 +632,32 @@ public class FileUploader implements Serializable {
                 break;
             case "Lozan":
                 firstName = "Aurel";
-                lastName ="Lozan";
+                lastName ="Lozan"; 
+                break;
+            case "Mathias Riedel":
+                firstName = "Matthias";
+                lastName ="Riedel"; 
+                break;
+            case "Mathias Jaschhof":
+                firstName = "Matthias";
+                lastName ="Jaschhof"; 
+                break; 
+            case "William Englund":
+                firstName = "William";
+                lastName ="Englung";
+                break; 
+            case "Emilia P. Narchuk":
+                firstName = "Emilia";
+                lastName ="Nartshuk"; 
+                break;
+            case "Fusu Lucian":
+                firstName = "Lucian";
+                lastName ="Fusu"; 
+                break;
+            case "Oleksandr (Sasha) Varga": 
+                firstName = "Oleksandr (Sasha)";
+                lastName ="Varga"; 
+                break;
             default:
                 getName();
                 break;

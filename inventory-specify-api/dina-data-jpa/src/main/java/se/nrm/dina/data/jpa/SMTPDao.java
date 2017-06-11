@@ -19,10 +19,11 @@ public interface SMTPDao<T extends EntityBean> {
     
     public T findByReference(int id, Class<T> clazz);
     
-    public T create(T entity);
+    public T create(T entity); 
     
     public void bacthCreate(List<T> entities);
     
+    public T merge(T entity);
     
     public T getEntityByJPQL(String jpql);
     
@@ -40,9 +41,7 @@ public interface SMTPDao<T extends EntityBean> {
      * @return
      */
     public T getEntityByNamedQuery(String namedQuery, Map<String, Object> map);
-
-
-   
+  
     public String getLastCatalogunumber(String jpql); 
     
     public void deleteOldSMTPData();

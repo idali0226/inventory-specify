@@ -20,10 +20,11 @@ public final class TaxanData {
     private final String author; 
     private final String notes; 
     private final String source;    
+    private final String remarks;
     
     
     public TaxanData(int taxaId, String genus, String species, String computedName, 
-                        String guid, String author, String notes,  String source) {
+                        String guid, String author, String notes,  String source, String remarkes) {
         this.taxaId = taxaId;
         this.genus = genus;
         this.species = species;
@@ -32,6 +33,7 @@ public final class TaxanData {
         this.author = author;
         this.notes = notes;
         this.source = source; 
+        this.remarks = remarkes;
     }
 
     public int getTaxaId() {
@@ -64,5 +66,9 @@ public final class TaxanData {
 
     public String getSource() {
         return source;
+    } 
+
+    public String getRemarks() {
+        return remarks;
     } 
 }

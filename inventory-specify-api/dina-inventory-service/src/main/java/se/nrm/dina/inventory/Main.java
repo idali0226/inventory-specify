@@ -6,9 +6,13 @@
 package se.nrm.dina.inventory;
 
 //import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.wildfly.swarm.Swarm; 
 import org.wildfly.swarm.datasources.DatasourcesFraction;  
-import org.wildfly.swarm.undertow.UndertowFraction;
+//import org.wildfly.swarm.jaxrs.JAXRSArchive;
+//import org.wildfly.swarm.keycloak.Secured;
+//import org.wildfly.swarm.undertow.UndertowFraction;
+import org.wildfly.swarm.undertow.WARArchive;
 //import org.wildfly.swarm.keycloak.Secured;
 //import org.wildfly.swarm.management.ManagementFraction;
 //import org.wildfly.swarm.undertow.WARArchive;
@@ -35,7 +39,7 @@ public class Main {
                 
 
 
-
+        swarm.start().deploy();
 
 
 
@@ -45,7 +49,7 @@ public class Main {
         
 //        JAXRSArchive deployment = ShrinkWrap.create(JAXRSArchive.class);
 //        deployment.as(Secured.class); 
-        swarm.start().deploy(); 
+//        swarm.start().deploy(deployment); 
     }
     
     private static DatasourcesFraction datasourceProductionWithMysql() {

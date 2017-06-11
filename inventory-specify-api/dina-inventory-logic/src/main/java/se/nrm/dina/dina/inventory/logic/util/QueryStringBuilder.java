@@ -75,7 +75,7 @@ public class QueryStringBuilder {
         return sb.toString();
     }
     
-    public String buildGetTaxon(String fullName, int treeDefId) {
+    public String buildGetTaxon(String fullName, int treeDefId, boolean isAccepted) {
         
         logger.info("buildGetTaxon");
         
@@ -85,8 +85,12 @@ public class QueryStringBuilder {
         sb.append(treeDefId);
         sb.append(" AND t.fullName = '");
         sb.append(fullName); 
-        sb.append("' AND t.isAccepted = true");
-          
+        if(isAccepted) {
+            sb.append("' AND t.isAccepted = true");
+        } else {
+            sb.append("'");
+        }
+         
         return sb.toString();
     }
     

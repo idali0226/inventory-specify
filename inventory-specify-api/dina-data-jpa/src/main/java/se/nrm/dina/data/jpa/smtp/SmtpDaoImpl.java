@@ -13,6 +13,7 @@ import javax.ejb.Stateless;
 import javax.ejb.TransactionManagement;
 import javax.ejb.TransactionManagementType;
 import javax.persistence.EntityManager;
+import javax.persistence.OptimisticLockException;
 import javax.persistence.PersistenceContext; 
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
@@ -72,8 +73,29 @@ public class SmtpDaoImpl<T extends EntityBean> implements SMTPDao<T>, Serializab
         entityManager.flush();
         entityManager.clear();   
     }
-    
      
+
+    @Override 
+    public T merge(T entity) {
+
+        logger.info("merge: {}", entity);
+
+        T tmp = entity;
+        try { 
+            tmp = entityManager.merge(entity); 
+            entityManager.flush();                              // this one used for throwing OptimisticLockException if method called with web service
+//            entityManager.clear();
+        } catch (OptimisticLockException e) { 
+            logger.warn(e.getMessage());
+        } catch (ConstraintViolationException e) { 
+            logger.warn(e.getMessage());
+            throw new DinaException(e.getMessage());
+        } catch (Exception e) {  
+            logger.warn(e.getMessage());
+        }
+        return tmp;
+    }
+    
     @Override
     public int getCountByJPQL(String jpql) {
         logger.info("getCountByJPQL : {}", jpql);

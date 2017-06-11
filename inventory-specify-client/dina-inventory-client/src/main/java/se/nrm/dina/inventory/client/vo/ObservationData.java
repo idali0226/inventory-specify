@@ -27,6 +27,7 @@ public class ObservationData {
     private final int numOfFemales;   
     private final int total;  
     private int taxonId;
+    private String determinationRemarks;
     
     public ObservationData(int eventId, String genus, String species, String determiner, String firstName, 
                             String lastName, String determinedDate, String storage, String media, 
@@ -109,4 +110,14 @@ public class ObservationData {
     public void setTaxonId(int taxonId) {
         this.taxonId = taxonId;
     } 
+
+    public String getDeterminationRemarks() {
+        return determinationRemarks;
+    }
+
+    public void setDeterminationRemarks(String determinationRemarks) {
+        this.determinationRemarks = determinationRemarks;
+    }
+    
+    
 }

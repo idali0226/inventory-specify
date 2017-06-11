@@ -69,10 +69,7 @@ public class InventoryServices implements Serializable {
         logger.info("validateTaxon : {}", json); 
         return Response.ok(logic.validateTaxon(json)).build();
     }
- 
-    
-    
- 
+  
     
     @POST 
     @Path("/")  
@@ -83,14 +80,11 @@ public class InventoryServices implements Serializable {
         return Response.ok().build();
     }
     
-    
-  
     @POST 
     @Path("{rank}")  
     public Response readExcel(@PathParam("rank") String rank) { 
         logger.info("readExcel : {}", rank);
-        
-        
+         
         switch (rank) {
             
             case "subphylum":
@@ -128,33 +122,102 @@ public class InventoryServices implements Serializable {
                 break;
             case "subspecies":
                 dyntaxaDumpLogic.uploadSubspecies();
-                break;
-            case "synonmy":
-                dyntaxaDumpLogic.uploadSynonmys();
-                break;
-            case "synonmy_species_1":
-                dyntaxaDumpLogic.uploadSpeciesSynonmys1();
-                break;
-            case "synonmy_species_2":
-                dyntaxaDumpLogic.uploadSpeciesSynonmys();
-                break;
-            case "synonmy_subspecies":
-                dyntaxaDumpLogic.uploadSubspeciesSynonmys();
-                break;
-            case "highTaxa": 
+                break; 
+            case "correctionsToDyntaxa":                                        // excel sheets
                 excelLogic.readInExcelFile(rank);
+                break;
+            case "highTaxa":                                                    
+                excelLogic.readInExcelFile(rank);                               
                 break;
             case "newTaxa": 
-                excelLogic.readInExcelFile(rank);
+                excelLogic.readInExcelFile(rank);                               
+                break;
+            case "oldHigherTaxonSynonyms": 
+                excelLogic.readInExcelFile(rank);                                
                 break;
             case "newSynonyms": 
                 excelLogic.readInExcelFile(rank);
                 break;
+            case "oldSynonyms": 
+                excelLogic.readInExcelFile(rank);
+                break;  
             default: 
                 break;
         }
         return Response.ok().build();
     }
+    
+  
+//    @POST 
+//    @Path("{rank}")  
+//    public Response readExcel(@PathParam("rank") String rank) { 
+//        logger.info("readExcel : {}", rank);
+//        
+//        
+//        switch (rank) {
+//            
+//            case "subphylum":
+//                dyntaxaDumpLogic.uploadSubphylum();
+//                break;
+//            case "order":
+//                dyntaxaDumpLogic.uploadOrders();
+//                break;
+//            case "superfamily":
+//                dyntaxaDumpLogic.uploadSuperfamily();
+//                break;
+//            case "family":
+//                dyntaxaDumpLogic.uploadFamily();
+//                break;
+//            case "subfamily":
+//                dyntaxaDumpLogic.uploadSubfamily();
+//                break;
+//            case "tribe":
+//                dyntaxaDumpLogic.uploadTribe();
+//                break;
+//            case "subtribe":
+//                dyntaxaDumpLogic.uploadSubtribe();
+//                break; 
+//            case "genus": 
+//                dyntaxaDumpLogic.uploadGenus();
+//                break;
+//            case "subgenus":
+//                dyntaxaDumpLogic.uploadSubgenus();
+//                break;
+//            case "species_genus":
+//                dyntaxaDumpLogic.uploadSpeciesOnGenus();
+//                break; 
+//            case "species_subgenus":
+//                dyntaxaDumpLogic.uploadSpeciesOnSubgenus(); 
+//                break;
+//            case "subspecies":
+//                dyntaxaDumpLogic.uploadSubspecies();
+//                break;
+//            case "synonmy":
+//                dyntaxaDumpLogic.uploadSynonmys();
+//                break;
+//            case "synonmy_species_1":
+//                dyntaxaDumpLogic.uploadSpeciesSynonmys1();
+//                break;
+//            case "synonmy_species_2":
+//                dyntaxaDumpLogic.uploadSpeciesSynonmys();
+//                break;
+//            case "synonmy_subspecies":
+//                dyntaxaDumpLogic.uploadSubspeciesSynonmys();
+//                break;
+//            case "highTaxa": 
+//                excelLogic.readInExcelFile(rank);
+//                break;
+//            case "newTaxa": 
+//                excelLogic.readInExcelFile(rank);
+//                break;
+//            case "newSynonyms": 
+//                excelLogic.readInExcelFile(rank);
+//                break;
+//            default: 
+//                break;
+//        }
+//        return Response.ok().build();
+//    }
     
     
 //    @DELETE

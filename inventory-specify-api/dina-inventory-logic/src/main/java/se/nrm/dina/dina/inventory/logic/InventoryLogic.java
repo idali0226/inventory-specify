@@ -73,13 +73,12 @@ public class InventoryLogic implements Serializable {
     private String determinedDate; 
     private String fullName;
     private String media;
+    private String determinationRemarks;
     
     private String storage; 
     private String remark;
     private String loanNumber;
-    
-    
-
+     
     
     @EJB
     private SMTPDao dao;
@@ -89,22 +88,40 @@ public class InventoryLogic implements Serializable {
     }
     
     private Taxon getTaxonFromDB(String fullName) {
-
-        if (fullName.trim().endsWith("sp.")) {
-            fullName = StringUtils.replace(fullName, "sp.", "").trim();
-        } else if (fullName.equals("Barylypa propugnator")) {
-            fullName = "Barylypta propugnator";
+         
+        if (fullName.trim().endsWith("sp.")) { 
+            fullName = StringUtils.replace(fullName, "sp.", "").trim(); 
         } else if (fullName.equals("Olethreutes lacunana")) {
             fullName = "Olethreutes lacunanum";
-        } else if (fullName.equals("Arachnospila sogdiana")) {
-            fullName = "Arachnospila sogdianoides";
-        } else if (fullName.equals("Coelichneumon cyaniventris")) {
-            fullName = "Coelichneumon cyaniventrus";
-        } else if (fullName.equals("Hepiopelmus variegatorius")) { 
-            fullName = "Hepiopelmus variegatorus";
-        } else if (fullName.equals("Homotropus frontorius")) {
-            fullName = "Syrphoctonus frontorius";
+        } else if(fullName.equals("Thecophora sp 1")) {
+            fullName = "Thecophora";
+        } else if(fullName.equals("Omphale sp in aetius-group")) {
+            fullName = "Omphale";
+        } else if(fullName.equals("Formica sp 1")) {
+            fullName = "Formica";
+        } else if(fullName.equals("Helina sp 1") || fullName.equals("Helina sp 2")) {
+            fullName = "Helina"; 
+        } else if(fullName.equals("Phaonia sp 1")) {
+            fullName = "Phaonia";
+        } else if(fullName.equals("Halictophagus sp 1")) {
+            fullName = "Halictophagus";
+        } else if(fullName.equals("Allantus sp 1")) {
+            fullName = "Allantus";
         }
+
+//        if (fullName.trim().endsWith("sp.")) {
+//            fullName = StringUtils.replace(fullName, "sp.", "").trim();
+//        } else if (fullName.equals("Barylypa propugnator")) {
+//            fullName = "Barylypta propugnator";
+//        else if (fullName.equals("Arachnospila sogdiana")) {
+//            fullName = "Arachnospila sogdianoides";
+//        } else if (fullName.equals("Coelichneumon cyaniventris")) {
+//            fullName = "Coelichneumon cyaniventrus";
+//        } else if (fullName.equals("Hepiopelmus variegatorius")) { 
+//            fullName = "Hepiopelmus variegatorus";
+//        } else if (fullName.equals("Homotropus frontorius")) {
+//            fullName = "Syrphoctonus frontorius";
+//        }
         List<Taxon> taxonList =  dao.getEntitiesByJPQL(QueryStringBuilder
                                                         .getInstance()
                                                         .buildGetTaxon(fullName));
@@ -235,6 +252,7 @@ public class InventoryLogic implements Serializable {
                                     preferedTaxonMap.put(fullName, preferdTaxon);
                                 }
                             }
+                            determinationRemarks = coObject.getString("determinationRemarks");
                              
                             media = coObject.getString("media");
                             if(media != null && !media.trim().isEmpty()) {
@@ -366,6 +384,9 @@ public class InventoryLogic implements Serializable {
         determination.setPreferredTaxonID(preferdTaxon);
         determination.setDeterminerID(determinedBy);
         determination.setCollectionObjectID(co);
+        if(determinationRemarks != null) {
+            determination.setRemarks(determinationRemarks);
+        }
         return determination;
     }
     
