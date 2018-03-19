@@ -5,6 +5,7 @@
  */
 package se.nrm.dina.dina.inventory.logic;
  
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Timestamp;   
 import java.util.ArrayList;  
@@ -14,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;  
 import java.util.function.Predicate;
+import java.util.logging.Level;
 import java.util.stream.IntStream;
 import javax.ejb.EJB;  
 import javax.ejb.Stateless;     
@@ -87,6 +89,10 @@ public class InventoryLogic implements Serializable {
         
     }
     
+    public String getCollectionsFromDb() {
+        return ((Collection) dao.getEntityByNamedQuery("Collection.findAll", new HashMap())).toString(); 
+    }
+    
     private Taxon getTaxonFromDB(String fullName) {
          
         if (fullName.trim().endsWith("sp.")) { 
@@ -107,7 +113,9 @@ public class InventoryLogic implements Serializable {
             fullName = "Halictophagus";
         } else if(fullName.equals("Allantus sp 1")) {
             fullName = "Allantus";
-        }
+        } else if(fullName.equals("Clusiodes sp 1") || fullName.equals("Clusiodes sp 2")) {
+            fullName = "Clusiodes";
+        } 
 
 //        if (fullName.trim().endsWith("sp.")) {
 //            fullName = StringUtils.replace(fullName, "sp.", "").trim();
@@ -171,7 +179,44 @@ public class InventoryLogic implements Serializable {
 //        return JsonBuilder.getInstance().buildTaxonJson(taxons);
         return taxons;
     }
+    
+    public List<Taxon> getSpeciesList() {
+  
+        logger.info("getSpeciesList");
+             
+        List<Taxon> speciesList = new ArrayList();
+        //        List<Taxon> results = new ArrayList();
+        List<Taxon> children = getAllChildenFromDb(541565);
+        logger.info("Children size : {}", children.size());
+        children.stream().forEach(c -> {
+            List<Taxon> gChildren = getAllChildenFromDb(c.getTaxonID());
+            gChildren.stream().forEach(g -> {
+                if(g.getRankID() == 220) {
+                    speciesList.add(g);
+                } else {
+                    logger.info("not species : {}", g.getRankID());
+                }
+            });
+        });
 
+        logger.info("g children size : {}", speciesList.size());
+        ExcelWriter excel = new ExcelWriter();
+        try {
+            excel.writeCSVFile(speciesList); 
+        } catch (IOException ex) {
+            logger.error(ex.getMessage());
+        }
+        return speciesList;
+    }
+
+ 
+    private List<Taxon> getAllChildenFromDb(int parentId) {
+        // parentId 541565 is Phoridae
+        String jpql = QueryStringBuilder.getInstance().buildGetAllChildren(parentId);
+        return dao.getSearchResultsByJPQL(jpql);
+    }
+    
+    
     public String getSmtpAgentList() {
         logger.info("getSmtpAgentList");
         List<Object[]> results = dao.getSearchResultsByJPQL(

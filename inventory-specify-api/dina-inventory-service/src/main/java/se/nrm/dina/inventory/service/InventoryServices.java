@@ -45,12 +45,21 @@ public class InventoryServices implements Serializable {
     private ExcelLogic excelLogic;
 
 
-//    @GET
-//    @Produces("text/plain")
-//    public Response doGet() {
-//        logger.info("logic : {}", logic);
+    @GET
+    @Produces("text/plain")
+    public Response doGet() {
+        logger.info("logic : {}", logic);
+        return Response.ok(logic.getCollectionsFromDb()).build();
 //        return Response.ok("Hello from WildFly Swarm!").build();
-//    }
+    }
+    
+    @GET
+    @Path("/species")
+    @Produces({MediaType.APPLICATION_JSON})
+    public Response getSpeciesListFromSMTPList() {
+        logger.info("getSpeciesListFromSMTPList");
+        return Response.ok(logic.getSpeciesList()).build();
+    }
 
     @GET
     @Path("/agents")
@@ -69,7 +78,7 @@ public class InventoryServices implements Serializable {
         logger.info("validateTaxon : {}", json); 
         return Response.ok(logic.validateTaxon(json)).build();
     }
-  
+//  SELECT t FROM se.nrm.dina.datamodel.impl.Taxon AS t WHERE t.taxonTreeDefID.taxonTreeDefID = 11' AND t.rankID <= 140
     
     @POST 
     @Path("/")  

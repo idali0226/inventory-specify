@@ -36,7 +36,7 @@ import se.nrm.dina.dina.inventory.logic.util.Util;
 @Stateless
 public class ExcelLogic implements Serializable {
 
- private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String EXCEL_FILE_PATH = "/Users/idali/Desktop/New_smtp_taxa_2017-06-07.xlsx";
     private static final String NAMED_QUERY_GET_AGENT_BY_NAME = "Agent.findByAgentName";

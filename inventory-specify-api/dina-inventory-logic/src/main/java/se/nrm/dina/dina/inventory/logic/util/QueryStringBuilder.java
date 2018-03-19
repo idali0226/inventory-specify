@@ -60,6 +60,32 @@ public class QueryStringBuilder {
         return sb.toString();
     }
     
+//    return "SELECT a.agentID, a.firstName, a.lastName, a.remarks FROM Agent AS a WHERE a.agentType = 1 AND a.remarks like '%smtp%'"; 
+    
+    public String buildGetSpeciesListUnderFamilyFromDB() {
+        sb = new StringBuilder();
+        sb.append("SELECT t.author, t.commonName, t.fullName, t.guid, t.isAccepted, t.name, t.rankId, t.remarks, t.sources, t.parentId FROM Taxon AS t ");
+        sb.append("WHERE t.taxonTreeDefID.taxonTreeDefID = ");
+        sb.append(11); 
+        sb.append(" AND t.rankID = ");
+        sb.append(220); 
+//        sb.append(" AND t.isAccepted = true");
+         
+        return sb.toString();
+    }
+    
+    public String buildGetAllChildren(int parentId) {
+        sb = new StringBuilder();
+        sb.append("SELECT t FROM Taxon AS t ");
+        sb.append("WHERE t.taxonTreeDefID.taxonTreeDefID = ");
+        sb.append(11); 
+        sb.append(" AND t.parentID.taxonID = ");
+        sb.append(parentId); 
+//        sb.append(" AND t.isAccepted = true");
+         
+        return sb.toString();
+    }
+    
     public String buildGetTaxonParent(String fullName, int rankId, int treeDefId) {
         
         sb = new StringBuilder();

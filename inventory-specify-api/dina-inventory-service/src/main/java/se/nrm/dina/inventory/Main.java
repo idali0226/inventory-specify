@@ -4,18 +4,9 @@
  * and open the template in the editor.
  */
 package se.nrm.dina.inventory;
-
-//import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
+ 
 import org.wildfly.swarm.Swarm; 
-import org.wildfly.swarm.datasources.DatasourcesFraction;  
-//import org.wildfly.swarm.jaxrs.JAXRSArchive;
-//import org.wildfly.swarm.keycloak.Secured;
-//import org.wildfly.swarm.undertow.UndertowFraction;
-import org.wildfly.swarm.undertow.WARArchive;
-//import org.wildfly.swarm.keycloak.Secured;
-//import org.wildfly.swarm.management.ManagementFraction;
-//import org.wildfly.swarm.undertow.WARArchive;
+import org.wildfly.swarm.datasources.DatasourcesFraction;   
 
 /**
  *
@@ -31,7 +22,7 @@ public class Main {
          
           
         swarm.fraction(datasourceWithMysql());                                      // local
-//          swarm.fraction(datasourceProductionWithMysql());                        // production
+//       swarm.fraction(datasourceProductionWithMysql());                       //production
 //        swarm.fraction(getManagementFraction());
         
 
@@ -70,8 +61,8 @@ public class Main {
                     ds.jndiName("java:/jdbc/DinaDS");
                     ds.driverName("com.mysql");
                     ds.connectionUrl("jdbc:mysql://dina-db.nrm.se:3306/dina_nrm?autoReconnect=true&useSSL=false");
-                    ds.userName("dina");
-                    ds.password("dorinda");
+                    ds.userName("user");
+                    ds.password("password");
                 });
     }
     
@@ -94,26 +85,11 @@ public class Main {
                     ds.jndiName("java:/jdbc/DinaDS");
                     ds.driverName("com.mysql");
                     ds.connectionUrl("jdbc:mysql://localhost:3306/dina_nrm?autoReconnect=true&useSSL=false");
-                    ds.userName("root");
-                    ds.password("friday18"); 
+                    ds.userName("user");
+                    ds.password("password"); 
                 });
     }
     
-        
-//    private static ManagementFraction getManagementFraction() { 
-//        return ManagementFraction.createDefaultFraction()
-//                        .httpInterfaceManagementInterface((iface) -> {
-//                            iface.allowedOrigin("http://localhost:8080");
-//                            iface.securityRealm("ManagementRealm");
-//                        })
-//                        .securityRealm("ManagementRealm", (realm) -> {
-//                            realm.inMemoryAuthentication((authn) -> {
-//                                authn.add("admin", "dina", true);
-//                            });
-//                            realm.inMemoryAuthorization((authz) -> {
-//                                authz.add("admin", "dina");
-//                            });
-//                        });
-//    }
+ 
 
 }
